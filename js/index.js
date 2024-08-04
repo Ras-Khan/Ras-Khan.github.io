@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const words = ["UI/UX Design", "Laravel", "TailwindCSS", "React", "PHP", "C/C++", "Java", "SQL"];
+    const words = ["Laravel", "UI/UX Design", "TailwindCSS", "React", "PHP", "C/C++", "Java", "SQL"];
     const hexagon = document.querySelector('.hexagon');
 
     words.forEach((word, index) => {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateHexagon() {
         currentIndex++;
-        hexagon.style.transition = 'transform 1s ease';
+        hexagon.style.transition = 'transform 0.5s';
         hexagon.style.transform = `rotateX(${currentIndex * -360 / words.length}deg)`;
     }
 

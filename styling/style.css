@@ -72,29 +72,23 @@ nav .nav-links li a {
     color: transparent;
 }
 
-.hexagon-container {
-    perspective: 1000px;
-    margin-top: 2rem;
-    height: 80px;
-}
-
+/* Hexagon scroller */
 .hexagon {
-    position: relative;
     width: 500px;
-    height: 80px;
+    height: 70px;
     transform-style: preserve-3d;
     transform: rotateX(0deg);
-    transition: transform 0.25s ease-out;
+    transition: transform 0.5s;
 }
 
 .hexagon .face {
     position: absolute;
     width: 500px;
-    height: 80px;
+    height: 70px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-left: 4.5rem;
+    padding-left: 0rem;
     background: transparent;
     color: #00FFBB;
     font-size: 3rem;
@@ -122,8 +116,44 @@ section {
 }
 
 .hexagon-container {
-    perspective: 1000px;
-    margin-top: 0rem;
-    height: 80px;
+    height: 70px;
     overflow: hidden;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .intro {
+        padding: 1.5rem;
+        margin-left: 3rem; 
+        margin-top: 3rem;  
+    }
+
+    .intro h1 {
+        font-size: 3rem;
+    }
+
+    .hexagon .face {
+        font-size: 2rem;
+    } 
+}
+
+@media (max-width: 480px) {
+    .intro {
+        padding: 1rem;
+        margin-left: 2rem; 
+        margin-top: 2rem;  
+    }
+
+    .intro h1 {
+        font-size: 3rem;
+    }
+
+    .hexagon .face {
+        font-size: 2rem;
+    } 
+
+    .hexagon-container {
+        margin-top: 0rem;
+    }
+    
 }
