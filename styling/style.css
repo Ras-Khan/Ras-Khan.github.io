@@ -4,9 +4,9 @@ body {
     padding: 0;
     background: #121212;
     color: #FFF;
-    height: 100vh;
     display: flex;
     flex-direction: column;
+    height: 200vh; /* Make the entire page height bigger than the viewport */
 }
 
 header {
@@ -49,19 +49,41 @@ nav .nav-links li a {
     font-weight: bold;
 }
 
+#home {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
 .intro {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: 100%;
+    align-items: flex-start; /* Align items to the start */
+    height: 80vh; /* Transition into the next element */
     padding: 2rem;
     text-align: left;
-    margin-left: 4rem; 
-    margin-top: 4rem;  
+    margin-left: 2rem; 
+    margin-top: 2rem;
+    position: relative; /* Ensure it is positioned relative to the canvas */
+    z-index: 1;
+}
+
+.text-container {
+    display: inline-block;
+    background: rgba(200, 200, 200, 0.05);
+    border-radius: 15px;
+    padding: 1rem 2rem 1rem 2rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: auto; 
+    max-width: 100%;
+    z-index: 100;
 }
 
 .intro h1 {
-    font-size: 5rem;
+    font-size: 4rem;
     margin: 0;
 }
 
@@ -74,7 +96,6 @@ nav .nav-links li a {
 
 /* Hexagon scroller */
 .hexagon {
-    width: 500px;
     height: 70px;
     transform-style: preserve-3d;
     transform: rotateX(0deg);
@@ -109,6 +130,7 @@ nav .nav-links li a {
 
 .emptySpace {
     height: 20rem;
+    background-color: #001328;
 }
 
 section {
@@ -120,7 +142,46 @@ section {
     overflow: hidden;
 }
 
+#nightSky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Ensure it is behind the content */
+}
+
+#canvasOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* On top of the canvas, below other elements */
+    background: transparent;
+}
+
 /* Media Queries for Responsiveness */
+@media (max-width: 1280px) {
+    .intro {
+        padding: 1.5rem;
+        margin-left: 3rem; 
+        margin-top: 3rem;  
+    }
+
+    .intro h1 {
+        font-size: 4rem;
+    }
+
+    .intro .highlight {
+        font-size: 3rem;
+    }
+
+    .hexagon .face {
+        font-size: 3rem;
+    } 
+}
+
 @media (max-width: 768px) {
     .intro {
         padding: 1.5rem;
@@ -135,6 +196,10 @@ section {
     .hexagon .face {
         font-size: 2rem;
     } 
+
+    .text-container {
+        padding: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -155,5 +220,4 @@ section {
     .hexagon-container {
         margin-top: 0rem;
     }
-    
 }
