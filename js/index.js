@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let animationFrameId;
     let mouseX = null;
     let mouseY = null;
-    let debounceTimeout;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -63,6 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function drawNightSky() {
+        context.clearRect(0, 0, canvas.width, canvas.height); // Clear only the canvas area
+
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, '#000');
         gradient.addColorStop(0.30, '#000');
@@ -133,34 +134,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return selectedStars;
     }
 
-    let smoothMouseX = null;
-    let smoothMouseY = null;
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
 
-    overlay.addEventListener('mousemove', (event) => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-            mouseX = event.clientX;
-            mouseY = event.clientY;
-        }, 20); // 20 ms debounce
-    });
+    overlay.addEventListener('mousemove', debounce((event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    }, 20));
 
     overlay.addEventListener('mouseleave', () => {
         mouseX = null;
         mouseY = null;
     });
-
-    function interpolateMousePosition() {
-        if (mouseX !== null && mouseY !== null) {
-            if (smoothMouseX === null || smoothMouseY === null) {
-                smoothMouseX = mouseX;
-                smoothMouseY = mouseY;
-            } else {
-                smoothMouseX += (mouseX - smoothMouseX) * 0.1;
-                smoothMouseY += (mouseY - smoothMouseY) * 0.1;
-            }
-        }
-        requestAnimationFrame(interpolateMousePosition);
-    }
 
     window.addEventListener('resize', () => {
         cancelAnimationFrame(animationFrameId); // Cancel the previous animation frame
@@ -170,5 +160,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resizeCanvas();
     drawNightSky();
-    interpolateMousePosition();
 });
