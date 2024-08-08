@@ -51,7 +51,7 @@ nav .nav-links li a {
 
 #background {
     position: relative;
-    height: 45vh; /* Cover the upper half of the screen */
+    height: 40vh; /* Cover the upper half of the screen */
     width: 100%;
 }
 
@@ -224,5 +224,23 @@ section {
 
     .hexagon-container {
         margin-top: 0rem;
+    }
+}
+
+@media (max-height: 768px) {
+    #background {
+        height: 45vh; 
+    }
+}
+
+@media (max-height: 650px) {
+    #background {
+        height: 55vh; 
+    }
+}
+
+@media (max-height: 500px) {
+    #background {
+        height: 60vh; 
     }
 }

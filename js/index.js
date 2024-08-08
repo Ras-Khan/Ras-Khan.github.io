@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < (window.innerWidth / 10); i++) { // Reduce number of stars
+        for (let i = 0; i < (window.innerWidth / 15); i++) { // Reduce number of stars
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function drawNightSky() {
-        context.clearRect(0, 0, canvas.width, canvas.height); // Clear only the canvas area
+        //context.clearRect(0, 0, canvas.width, canvas.height); // Clear only the canvas area
 
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, '#000');
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.addEventListener('mousemove', throttle((event) => {
         mouseX = event.clientX;
         mouseY = event.clientY;
-    }, 20));
+    }, 50));
 
     overlay.addEventListener('mouseleave', () => {
         mouseX = null;
