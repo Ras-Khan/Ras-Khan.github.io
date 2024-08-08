@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let animationFrameId;
     let mouseX = null;
     let mouseY = null;
+    let debounceTimeout;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -136,8 +137,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let smoothMouseY = null;
 
     overlay.addEventListener('mousemove', (event) => {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
+        }, 20); // 20 ms debounce
     });
 
     overlay.addEventListener('mouseleave', () => {
