@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < (window.innerWidth / 5); i++) {
+        for (let i = 0; i < (window.innerWidth / 10); i++) { // Reduce number of stars
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -109,40 +109,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function findNearestStars(x, y, count) {
-        const nearestStars = [];
-        const usedStars = new Set();
+        const nearestStars = stars.map(star => ({
+            star,
+            distance: Math.hypot(star.x - x, star.y - y)
+        }))
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, count)
+        .map(item => item.star);
 
-        stars.forEach(star => {
-            const distance = Math.hypot(star.x - x, star.y - y);
-            nearestStars.push({ star, distance });
-        });
-
-        nearestStars.sort((a, b) => a.distance - b.distance);
-
-        const selectedStars = [];
-        let starIndex = 0;
-
-        while (selectedStars.length < count && starIndex < nearestStars.length) {
-            const currentStar = nearestStars[starIndex].star;
-            if (!usedStars.has(currentStar)) {
-                selectedStars.push(currentStar);
-                usedStars.add(currentStar);
-            }
-            starIndex++;
-        }
-
-        return selectedStars;
+        return nearestStars;
     }
 
-    function debounce(func, wait) {
-        let timeout;
+    function throttle(func, limit) {
+        let lastFunc;
+        let lastRan;
         return function(...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
+            if (!lastRan) {
+                func.apply(this, args);
+                lastRan = Date.now();
+            } else {
+                clearTimeout(lastFunc);
+                lastFunc = setTimeout(() => {
+                    if ((Date.now() - lastRan) >= limit) {
+                        func.apply(this, args);
+                        lastRan = Date.now();
+                    }
+                }, limit - (Date.now() - lastRan));
+            }
         };
     }
 
-    overlay.addEventListener('mousemove', debounce((event) => {
+    overlay.addEventListener('mousemove', throttle((event) => {
         mouseX = event.clientX;
         mouseY = event.clientY;
     }, 20));
