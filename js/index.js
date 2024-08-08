@@ -26,9 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('canvasOverlay');
     const context = canvas.getContext('2d');
     let stars = [];
+    let supernovaParticles = [];
     let animationFrameId;
     let mouseX = null;
     let mouseY = null;
+    let supernovaTimer = 0;
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -49,21 +51,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < (window.innerWidth / 15); i++) { // Reduce number of stars
+        for (let i = 0; i < (window.innerWidth / 10); i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 radius: Math.random() * 2.0,
                 alpha: Math.random(),
                 alphaChange: (Math.random() * 0.025) - 0.01,
-                color: getRandomColor()
+                color: getRandomColor(),
+                exploding: false,
+                remove: false
             });
         }
     }
 
-    function drawNightSky() {
-        //context.clearRect(0, 0, canvas.width, canvas.height); // Clear only the canvas area
+    function createSupernova(star) {
+        const particles = [];
+        const numParticles = Math.random() * 10 + 10; 
+        for (let j = 0; j < numParticles; j++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 0.2 + 0.1; 
+            particles.push({
+                x: star.x,
+                y: star.y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                alpha: 1,
+                radius: Math.random() * 0.5 + 0.5 
+            });
+        }
+        supernovaParticles.push(...particles);
+        star.remove = true; 
+    }
 
+    function drawNightSky() {
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, '#000');
         gradient.addColorStop(0.30, '#000');
@@ -88,22 +109,60 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        stars.forEach(star => {
-            star.alpha += star.alphaChange;
-            if (star.alpha <= 0 || star.alpha >= 1) {
-                star.alphaChange = -star.alphaChange;
-            }
+        stars = stars.filter(star => !star.remove); 
 
-            const isConnected = connectedStars.includes(star);
-            const starAlpha = isConnected ? Math.min(3, 3) : star.alpha; // Brighten the connected stars
-            const starRadius = isConnected ? star.radius + 1.5 : star.radius; // Enlarge the connected stars
-            context.fillStyle = `${star.color}${starAlpha})`;
-            context.shadowBlur = isConnected ? 12 : 8; // Increase blur for connected stars
-            context.shadowColor = `${star.color}1)`;
-            context.beginPath();
-            context.arc(star.x, star.y, starRadius, 0, Math.PI * 2, false);
-            context.fill();
+        stars.forEach(star => {
+            if (!star.exploding) {
+                star.alpha += star.alphaChange;
+                if (star.alpha <= 0 || star.alpha >= 1) {
+                    star.alphaChange = -star.alphaChange;
+                }
+
+                const isConnected = connectedStars.includes(star);
+                const starAlpha = isConnected ? Math.min(3, 3) : star.alpha; 
+                const starRadius = isConnected ? star.radius + 1.5 : star.radius; 
+                context.fillStyle = `${star.color}${starAlpha})`;
+                context.shadowBlur = isConnected ? 12 : 8; 
+                context.shadowColor = `${star.color}1)`;
+                context.beginPath();
+                context.arc(star.x, star.y, starRadius, 0, Math.PI * 2, false);
+                context.fill();
+            } else {
+                star.radius += 0.05; 
+                context.fillStyle = `${star.color}1)`;
+                context.shadowBlur = 15;
+                context.shadowColor = `${star.color}1)`;
+                context.beginPath();
+                context.arc(star.x, star.y, star.radius, 0, Math.PI * 2, false);
+                context.fill();
+
+                if (star.radius > 3) { 
+                    createSupernova(star);
+                }
+            }
         });
+
+        supernovaParticles.forEach((particle, index) => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.alpha -= 0.005; 
+            if (particle.alpha > 0) {
+                context.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
+                context.beginPath();
+                context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2, false);
+                context.fill();
+            } else {
+                supernovaParticles.splice(index, 1); // Remove particles
+            }
+        });
+
+        if (supernovaTimer <= 0) {
+            const randomStar = stars[Math.floor(Math.random() * stars.length)];
+            randomStar.exploding = true;
+            supernovaTimer = Math.random() * 20000 + 30000; // Next supernova in 20-30 seconds
+        } else {
+            supernovaTimer -= 16; 
+        }
 
         animationFrameId = requestAnimationFrame(drawNightSky);
     }
@@ -150,9 +209,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', () => {
-        cancelAnimationFrame(animationFrameId); // Cancel the previous animation frame
+        cancelAnimationFrame(animationFrameId);
         resizeCanvas();
-        drawNightSky(); // Restart the animation
+        drawNightSky(); 
     });
 
     resizeCanvas();

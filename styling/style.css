@@ -2,11 +2,11 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #000913; /* End gradient color for the bottom half */
+    background: #000913; 
     color: #FFF;
     display: flex;
     flex-direction: column;
-    height: 200vh; /* Make the entire page height bigger than the viewport */
+    height: 200vh; 
 }
 
 header {
@@ -51,7 +51,7 @@ nav .nav-links li a {
 
 #background {
     position: relative;
-    height: 40vh; /* Cover the upper half of the screen */
+    height: 40vh; 
     width: 100%;
 }
 
@@ -61,7 +61,7 @@ nav .nav-links li a {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* Ensure it is behind the content */
+    z-index: 1; 
 }
 
 #canvasOverlay {
@@ -70,7 +70,7 @@ nav .nav-links li a {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* On top of the canvas, below other elements */
+    z-index: 2; 
     background: transparent;
 }
 
