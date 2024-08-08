@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #121212;
+    background: #000913; /* End gradient color for the bottom half */
     color: #FFF;
     display: flex;
     flex-direction: column;
@@ -49,23 +49,47 @@ nav .nav-links li a {
     font-weight: bold;
 }
 
+#background {
+    position: relative;
+    height: 45vh; /* Cover the upper half of the screen */
+    width: 100%;
+}
+
+#nightSky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Ensure it is behind the content */
+}
+
+#canvasOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* On top of the canvas, below other elements */
+    background: transparent;
+}
+
 #home {
     position: relative;
-    height: 100vh;
     overflow: hidden;
+    background-color: #000913;
 }
 
 .intro {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start; /* Align items to the start */
-    height: 80vh; /* Transition into the next element */
+    align-items: flex-start; 
     padding: 2rem;
     text-align: left;
     margin-left: 2rem; 
     margin-top: 2rem;
-    position: relative; /* Ensure it is positioned relative to the canvas */
+    position: relative; 
     z-index: 1;
 }
 
@@ -130,7 +154,7 @@ nav .nav-links li a {
 
 .emptySpace {
     height: 20rem;
-    background-color: #001328;
+    background-color: #000913;
 }
 
 section {
@@ -142,31 +166,12 @@ section {
     overflow: hidden;
 }
 
-#nightSky {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1; /* Ensure it is behind the content */
-}
-
-#canvasOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2; /* On top of the canvas, below other elements */
-    background: transparent;
-}
-
 /* Media Queries for Responsiveness */
 @media (max-width: 1280px) {
     .intro {
         padding: 1.5rem;
-        margin-left: 3rem; 
-        margin-top: 3rem;  
+        margin-left: 1rem; 
+        margin-top: 1rem;  
     }
 
     .intro h1 {
@@ -185,8 +190,8 @@ section {
 @media (max-width: 768px) {
     .intro {
         padding: 1.5rem;
-        margin-left: 3rem; 
-        margin-top: 3rem;  
+        margin-left: 1rem; 
+        margin-top: 1rem;  
     }
 
     .intro h1 {
@@ -205,8 +210,8 @@ section {
 @media (max-width: 480px) {
     .intro {
         padding: 1rem;
-        margin-left: 2rem; 
-        margin-top: 2rem;  
+        margin-left: 1rem; 
+        margin-top: 1rem;  
     }
 
     .intro h1 {

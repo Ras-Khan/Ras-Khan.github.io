@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = window.innerHeight / 2; // Cover only the upper half
         createStars();
     }
 
@@ -49,13 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createStars() {
         stars = [];
-        for (let i = 0; i < (window.innerWidth / 3); i++) {
+        for (let i = 0; i < (window.innerWidth / 5); i++) {
             stars.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                radius: Math.random() * 1.5,
+                radius: Math.random() * 2.0,
                 alpha: Math.random(),
-                alphaChange: (Math.random() * 0.020) - 0.005,
+                alphaChange: (Math.random() * 0.025) - 0.01,
                 color: getRandomColor()
             });
         }
@@ -65,48 +65,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, '#000');
         gradient.addColorStop(0.30, '#000');
-        gradient.addColorStop(1, '#001328');
+        gradient.addColorStop(1, '#000913');
         context.fillStyle = gradient;
         context.fillRect(0, 0, canvas.width, canvas.height);
+
+        let connectedStars = [];
+
+        if (mouseX !== null && mouseY !== null) {
+            connectedStars = findNearestStars(mouseX, mouseY, 4); // Find 4 nearest stars
+            context.strokeStyle = 'rgba(255, 255, 255, 0.90)';
+            context.lineWidth = 0.6;
+
+            if (connectedStars.length > 1) {
+                context.beginPath();
+                context.moveTo(connectedStars[0].x, connectedStars[0].y);
+                for (let i = 1; i < connectedStars.length; i++) {
+                    context.lineTo(connectedStars[i].x, connectedStars[i].y);
+                }
+                context.stroke();
+            }
+        }
 
         stars.forEach(star => {
             star.alpha += star.alphaChange;
             if (star.alpha <= 0 || star.alpha >= 1) {
                 star.alphaChange = -star.alphaChange;
             }
-            context.fillStyle = `${star.color}${star.alpha})`;
-            context.shadowBlur = 8;
+
+            const isConnected = connectedStars.includes(star);
+            const starAlpha = isConnected ? Math.min(3, 3) : star.alpha; // Brighten the connected stars
+            const starRadius = isConnected ? star.radius + 1.5 : star.radius; // Enlarge the connected stars
+            context.fillStyle = `${star.color}${starAlpha})`;
+            context.shadowBlur = isConnected ? 12 : 8; // Increase blur for connected stars
             context.shadowColor = `${star.color}1)`;
             context.beginPath();
-            context.arc(star.x, star.y, star.radius, 0, Math.PI * 2, false);
+            context.arc(star.x, star.y, starRadius, 0, Math.PI * 2, false);
             context.fill();
         });
-
-        if (mouseX !== null && mouseY !== null) {
-            const nearestStars = findNearestStars(mouseX, mouseY, 5); // Find 5 nearest stars
-            context.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-            context.lineWidth = 1;
-
-            context.beginPath();
-            context.moveTo(mouseX, mouseY);
-            nearestStars.forEach(star => {
-                context.lineTo(star.x, star.y);
-            });
-            context.stroke();
-        }
 
         animationFrameId = requestAnimationFrame(drawNightSky);
     }
 
     function findNearestStars(x, y, count) {
-        return stars
-            .map(star => ({
-                star,
-                distance: Math.hypot(star.x - x, star.y - y)
-            }))
-            .sort((a, b) => a.distance - b.distance)
-            .slice(0, count)
-            .map(item => item.star);
+        const nearestStars = [];
+        const usedStars = new Set();
+
+        stars.forEach(star => {
+            const distance = Math.hypot(star.x - x, star.y - y);
+            nearestStars.push({ star, distance });
+        });
+
+        nearestStars.sort((a, b) => a.distance - b.distance);
+
+        const selectedStars = [];
+        let starIndex = 0;
+
+        while (selectedStars.length < count && starIndex < nearestStars.length) {
+            const currentStar = nearestStars[starIndex].star;
+            if (!usedStars.has(currentStar)) {
+                selectedStars.push(currentStar);
+                usedStars.add(currentStar);
+            }
+            starIndex++;
+        }
+
+        return selectedStars;
     }
 
     let smoothMouseX = null;
