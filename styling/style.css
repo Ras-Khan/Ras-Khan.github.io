@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: #000913;
+    background: radial-gradient(#071355, #000913);
     color: #FFF;
     display: flex;
     flex-direction: column;
@@ -92,7 +92,7 @@ nav .nav-links li a {
 #home {
     position: relative;
     overflow: hidden;
-    background-color: #000913;
+    /*background-color: #000913;*/
 }
 
 .intro {
@@ -169,7 +169,7 @@ nav .nav-links li a {
 
 .emptySpace {
     height: 20rem;
-    background-color: #000913;
+    /* background-color: #000913; */
 }
 
 section {
@@ -204,6 +204,69 @@ section {
     width: 100%;
 }
 
+/* The glass-like projects container */
+/* 3D glass effect for the project display */
+.glass-effect {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 90%;
+    height: 20rem;
+    margin: 2rem auto;
+    background: rgba(255, 255, 255, 0.05); /* Clear transparent glass */
+    backdrop-filter: blur(8px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.3),        /* Outer shadow for depth */
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3), /* Inner light reflection */
+        inset 0 -4px 10px rgba(0, 0, 0, 0.2);  /* Inner shadow for thickness effect */
+    z-index: 10;
+    transform: perspective(1000px) rotateX(5deg); /* Slight 3D tilt */
+    border-radius: 0; /* No rounded corners */
+}
+
+.glass-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.02)); /* Subtle light reflection */
+    z-index: 1;
+}
+
+.glass-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8); /* Text is still visible, but soft */
+}
+
+.glass-content h1, .glass-content p {
+    font-size: 1.5rem;
+    margin: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 0; /* No rounded corners */
+    backdrop-filter: blur(3px); /* Soft blur on text for effect */
+    color: #fff;
+}
+
+/* Add a subtle reflection on the top side of the glass */
+.glass-effect::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); /* Subtle top reflection */
+    z-index: 1;
+    transform: translateY(2px);
+}
 
 
 
