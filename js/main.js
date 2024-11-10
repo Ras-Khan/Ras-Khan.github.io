@@ -8,9 +8,11 @@ function loadScript(url, callback) {
 // Load all scripts in sequence
 loadScript('js/hexagon.js', () => {
     loadScript('js/nightsky.js', () => {
-        // Initialize everything
-        initializeHexagon();
-        initializeNightSky();
+        loadScript('js/cube.js', () => {
+            // Initialize everything
+            //initializeHexagon();
+            //initializeNightSky();
+            initializeCube(); 
+        });
     });
 });
-

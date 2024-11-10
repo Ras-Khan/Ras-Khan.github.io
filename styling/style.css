@@ -1,12 +1,18 @@
+:root {
+    --cube-width: 1400px;
+    --cube-height: 700px;
+    --cube-depth: 20px;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: radial-gradient(#071355, #000913);
+    background: radial-gradient(circle at center, #030020 0%, #020018 50%, #03001f 100%);
     color: #FFF;
     display: flex;
     flex-direction: column;
-    height: 200vh; 
+    height: 200vh;
 }
 
 header {
@@ -14,7 +20,7 @@ header {
     top: 0;
     background: rgba(0, 0, 0, 0.3);
     color: #fff;
-    padding: 0.5rem 0; 
+    padding: 0.5rem 0;
     text-align: center;
     border-bottom: 1px solid #00FFBB;
     z-index: 1000;
@@ -25,8 +31,8 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 1rem; 
-    margin-left: 1rem; 
+    padding: 0 1rem;
+    margin-left: 1rem;
     max-width: 100%;
     box-sizing: border-box;
 }
@@ -39,8 +45,8 @@ nav {
 }
 
 .logo {
-    height: 40px; 
-    width: auto;  
+    height: 40px;
+    width: auto;
     margin-top: 0.1rem;
 }
 
@@ -74,8 +80,8 @@ nav .nav-links li a {
     top: 0;
     left: 0;
     width: 100%;
-    height: 25vh; 
-    z-index: 1; 
+    height: 25vh;
+    z-index: 1;
 }
 
 #canvasOverlay {
@@ -83,28 +89,26 @@ nav .nav-links li a {
     top: 0;
     left: 0;
     width: 100%;
-    height: 25vh; 
-    z-index: 2; 
+    height: 25vh;
+    z-index: 2;
     background: transparent;
 }
-
 
 #home {
     position: relative;
     overflow: hidden;
-    /*background-color: #000913;*/
 }
 
 .intro {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start; 
+    align-items: flex-start;
     padding: 1.5rem;
     text-align: left;
-    margin-left: 1rem; 
+    margin-left: 1rem;
     margin-top: 1rem;
-    position: relative; 
+    position: relative;
     z-index: 1;
 }
 
@@ -116,13 +120,13 @@ nav .nav-links li a {
     backdrop-filter: blur(5px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    width: auto; 
+    width: auto;
     max-width: 100%;
     z-index: 100;
 }
 
 .intro h1 {
-    font-size: 3rem; 
+    font-size: 3rem;
     margin: 0;
 }
 
@@ -135,7 +139,7 @@ nav .nav-links li a {
 }
 
 .hexagon {
-    height: 60px; 
+    height: 60px;
     transform-style: preserve-3d;
     transform: rotateX(0deg);
     transition: transform 0.5s;
@@ -143,8 +147,8 @@ nav .nav-links li a {
 
 .hexagon .face {
     position: absolute;
-    width: 450px; 
-    height: 60px; 
+    width: 450px;
+    height: 60px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -157,19 +161,8 @@ nav .nav-links li a {
     border: 1px solid transparent;
 }
 
-.hexagon .face.top,
-.hexagon .face.bottom {
-    display: none;
-}
-
-@keyframes rotate {
-    0% { transform: rotateX(0deg); }
-    100% { transform: rotateX(-360deg); }
-}
-
 .emptySpace {
     height: 20rem;
-    /* background-color: #000913; */
 }
 
 section {
@@ -177,7 +170,7 @@ section {
 }
 
 .hexagon-container {
-    height: 60px; 
+    height: 60px;
     overflow: hidden;
 }
 
@@ -185,17 +178,17 @@ section {
     position: fixed;
     top: 0;
     right: 0;
-    width: 120%; 
+    width: 120%;
     transform: rotate(-25deg);
-    background-color: #FFC107; 
-    color: #FFF; 
+    background-color: #FFC107;
+    color: #FFF;
     font-weight: bold;
     font-size: 1.5rem;
     text-align: center;
     padding: 10px 0;
-    z-index: 100; 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
-    border: 2px solid #000; 
+    z-index: 100;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    border: 2px solid #000;
     transform-origin: top right;
 }
 
@@ -204,98 +197,137 @@ section {
     width: 100%;
 }
 
-/* The glass-like projects container */
-/* 3D glass effect for the project display */
-.glass-effect {
+/* 3D Glass Cube */
+.glass-container {
+    display: flex;
+    justify-content: center;
+    align-items: top;
+    margin-top: 5rem;
+    height: 100vh;
+    perspective: 2500px;
+}
+
+.glass-cube {
+    width: var(--cube-width);
+    height: var(--cube-height);
     position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-10deg) rotateY(10deg);
+    transition: transform 1s ease;
+}
+
+.glass-face {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px) saturate(180%);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2),
+        inset 0 -8px 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Smaller shine effect for front and back faces */
+/*.glass-face.front::before, .glass-face.back::before {*/
+.glass-face.front::before {
+    content: '';
+    position: absolute;
+    top: 10;
+    right: -30px; /* Start slightly off-screen */
+    width: 200px; /* Smaller width for the shine */
+    height: 150%; /* Cover the height with a small buffer */
+    background: linear-gradient(120deg, rgba(20, 20, 20, 0.1) 0%, rgba(56, 56, 56, 0.1) 50%, rgba(20, 20, 20, 0.1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px) saturate(180%);
+    box-shadow:
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2),
+        inset 0 -8px 10px rgba(0, 0, 0, 0.2);
+    transform: rotate(10deg); /* Slight angle */
+    animation: shine 10s infinite ease-in-out; /* Animation duration adjusted */
+    pointer-events: none;
+}
+
+
+
+@keyframes shine {
+    0% {
+        transform: translateX(1000%) rotate(10deg); /* Start from the right */
+    }
+    100% {
+        transform: translateX(-5000%) rotate(10deg); /* Move to the left */
+    }
+}
+
+/* Front and Back Faces */
+.glass-face.front, .glass-face.back {
+    width: var(--cube-width);
+    height: var(--cube-height);
+}
+
+.glass-face.front {
+    transform: translateZ(calc(var(--cube-depth) / 2));
+}
+
+.glass-face.back {
+    transform: rotateY(180deg) translateZ(calc(var(--cube-depth) / 2));
+}
+
+/* Left and Right Faces */
+.glass-face.left, .glass-face.right {
+    width: var(--cube-depth);
+    height: var(--cube-height);
+}
+
+.glass-face.left {
+    transform: rotateY(-90deg) translateZ(calc(var(--cube-depth) / 2));
+}
+
+.glass-face.right {
+    transform: rotateY(90deg) translateZ(calc(var(--cube-width) / 1 - var(--cube-depth) / 2));
+}
+
+/* Top and Bottom Faces */
+.glass-face.top, .glass-face.bottom {
+    width: var(--cube-width);
+    height: var(--cube-depth);
+}
+
+.glass-face.top {
+    transform: rotateX(90deg) translateZ(calc(var(--cube-depth) / 2));
+}
+
+.glass-face.bottom {
+    transform: rotateX(-90deg) translateZ(calc(var(--cube-height) / 1 - var(--cube-depth) / 2));
+}
+
+/* Text styles for the faces */
+.glass-face {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    width: 90%;
-    height: 20rem;
-    margin: 2rem auto;
-    background: rgba(255, 255, 255, 0.05); /* Clear transparent glass */
-    backdrop-filter: blur(8px) saturate(150%);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.3),        /* Outer shadow for depth */
-        inset 0 0 0 1px rgba(255, 255, 255, 0.3), /* Inner light reflection */
-        inset 0 -4px 10px rgba(0, 0, 0, 0.2);  /* Inner shadow for thickness effect */
-    z-index: 10;
-    transform: perspective(1000px) rotateX(5deg); /* Slight 3D tilt */
-    border-radius: 0; /* No rounded corners */
-}
-
-.glass-effect::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.02)); /* Subtle light reflection */
-    z-index: 1;
-}
-
-.glass-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.8); /* Text is still visible, but soft */
-}
-
-.glass-content h1, .glass-content p {
     font-size: 1.5rem;
-    margin: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.5rem 1rem;
-    border-radius: 0; /* No rounded corners */
-    backdrop-filter: blur(3px); /* Soft blur on text for effect */
-    color: #fff;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Add a subtle reflection on the top side of the glass */
-.glass-effect::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0)); /* Subtle top reflection */
-    z-index: 1;
-    transform: translateY(2px);
+@media (max-width: 1550px) {
+    :root {
+        --cube-width: 1150px;
+        --cube-height: 600px;
+    }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Media Queries for Responsiveness */
 @media (max-width: 1280px) {
     .intro {
         padding: 1.5rem;
-        margin-left: 1rem; 
-        margin-top: 1rem;  
+        margin-left: 1rem;
+        margin-top: 1rem;
     }
 
     .intro h1 {
-        font-size: 3rem; 
+        font-size: 3rem;
     }
 
     .intro .highlight {
@@ -304,34 +336,58 @@ section {
 
     .hexagon .face {
         font-size: 1.8rem;
-    } 
+    }
+
+    :root {
+        --cube-width: 950px;
+        --cube-height: 500px;
+    }
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --cube-width: 700px;
+        --cube-height: 400px;
+    }
 }
 
 @media (max-width: 768px) {
     .intro {
         padding: 1.5rem;
-        margin-left: 1rem; 
-        margin-top: 1rem;  
+        margin-left: 1rem;
+        margin-top: 1rem;
     }
 
     .intro h1 {
-        font-size: 2.5rem; 
+        font-size: 2.5rem;
     }
 
     .hexagon .face {
-        font-size: 1.5rem; 
-    } 
+        font-size: 1.5rem;
+    }
 
     .text-container {
         padding: 1rem;
+    }
+
+    :root {
+        --cube-width: 600px;
+        --cube-height: 350px;
+    }
+}
+
+@media (max-width: 666px) {
+    :root {
+        --cube-width: 450px;
+        --cube-height: 250px;
     }
 }
 
 @media (max-width: 480px) {
     .intro {
         padding: 1rem;
-        margin-left: 1rem; 
-        margin-top: 1rem;  
+        margin-left: 1rem;
+        margin-top: 1rem;
     }
 
     .intro h1 {
@@ -340,9 +396,14 @@ section {
 
     .hexagon .face {
         font-size: 1.3rem;
-    } 
+    }
 
     .hexagon-container {
         margin-top: 0rem;
+    }
+
+    :root {
+        --cube-width: 350px;
+        --cube-height: 200px;
     }
 }
