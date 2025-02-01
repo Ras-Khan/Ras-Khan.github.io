@@ -6,7 +6,6 @@ function initializeNightSky() {
     let stars = [];
     let supernovaParticles = [];
     let mouseX = null, mouseY = null;
-    let supernovaTimer = 0;
 
     const resizeCanvas = () => {
         canvas.width = window.innerWidth;
@@ -37,22 +36,29 @@ function initializeNightSky() {
     };
 
     const createSupernova = (star) => {
-        const particles = Array.from({ length: Math.random() * 10 + 10 }, () => {
+        const initialRadius = star.radius; // Base radius
+    
+        const baseParticles = 5 + Math.random() * 5; // Reduce overall particle count
+        const numParticles = Math.floor(baseParticles + initialRadius * 2.5); 
+    
+        const particles = Array.from({ length: numParticles }, () => {
             const angle = Math.random() * Math.PI * 2;
-            const speed = Math.random() * 0.2 + 0.1;
+            const speed = (Math.random() * 0.1 + 0.05) * (2.5 / initialRadius); // Make smaller stars explode faster
+    
             return {
-                x: star.x,
-                y: star.y,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                alpha: 1,
-                radius: Math.random() * 0.5 + 0.5
+                x: star.x, 
+                y: star.y, 
+                vx: Math.cos(angle) * speed, 
+                vy: Math.sin(angle) * speed, 
+                alpha: 1, 
+                radius: Math.random() * 0.3 + initialRadius * 0.2,
             };
         });
+    
         supernovaParticles.push(...particles);
         star.remove = true;
     };
-
+    
     const drawNightSky = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
@@ -114,6 +120,11 @@ function initializeNightSky() {
             }
         });
 
+        // Random chance for a supernova trigger
+        if (Math.random() < 0.001 && stars.length > 0) { 
+            let randomStar = stars[Math.floor(Math.random() * stars.length)];
+            randomStar.exploding = true; 
+        }
         requestAnimationFrame(drawNightSky);
     };
 
@@ -123,6 +134,7 @@ function initializeNightSky() {
             .slice(0, count)
             .map(item => item.star);
 
+    // Throttle for better performance
     const throttle = (func, limit) => {
         let lastFunc, lastRan;
         return function(...args) {

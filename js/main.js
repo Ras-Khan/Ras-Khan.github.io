@@ -8,11 +8,14 @@ function loadScript(url, callback) {
 // Load all scripts in sequence
 loadScript('js/hexagon.js', () => {
     loadScript('js/nightsky.js', () => {
-        loadScript('js/cube.js', () => {
-            // Initialize everything
-            //initializeHexagon();
-            //initializeNightSky();
-            initializeCube(); 
+        loadScript('js/water.js', () => {
+            loadScript('js/cube.js', () => {
+                // Initialize everything
+                initializeHexagon();
+                initializeNightSky();
+                initializeWater();
+                initializeCube(); 
+            });
         });
     });
 });
