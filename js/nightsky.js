@@ -38,7 +38,7 @@ function initializeNightSky() {
     const createSupernova = (star) => {
         const initialRadius = star.radius; // Base radius
     
-        const baseParticles = 5 + Math.random() * 5; // Reduce overall particle count
+        const baseParticles = 5 + Math.random() * 5; // Reduce particles count
         const numParticles = Math.floor(baseParticles + initialRadius * 2.5); 
     
         const particles = Array.from({ length: numParticles }, () => {

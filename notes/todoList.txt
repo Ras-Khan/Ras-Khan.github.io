@@ -7,6 +7,7 @@ To-do list:
     1.4 Slide animation per projects /
     1.5 Add buttons to scroll through projects
     1.6 Make it responsive for all screen sizes 
+    1.7 Add a beam of light on the cube?
 2. Optional: Use bottom green borderline from nav as a 'loading bar'
 3. Add animation for scrolling down from glass cube
     3.1 Turn 180 or 360 degrees while scrolling down?

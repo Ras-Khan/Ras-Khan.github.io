@@ -37,11 +37,13 @@ function initializeWater() {
     
         // Water gradient
         let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, "#3a70b7");
-        gradient.addColorStop(0.3, "#2f5e9b");
-        gradient.addColorStop(0.6, "#234c80");
-        gradient.addColorStop(0.85, "#1a3a66");
-        gradient.addColorStop(1, "#102949");
+        gradient.addColorStop(0, "rgba(58, 112, 183, 0.80)");   // #3a70b7
+        gradient.addColorStop(0.1, "rgba(47, 94, 155, 0.90)");  // #2f5e9b
+        gradient.addColorStop(0.3, "rgba(47, 94, 155, 0.99)");  // #2f5e9b
+        gradient.addColorStop(0.6, "rgba(35, 76, 128, 0.99)");  // #234c80
+        gradient.addColorStop(0.85, "rgba(26, 58, 102, 0.99)"); // #1a3a66
+        gradient.addColorStop(1, "rgba(16, 41, 73, 1.00)");     // #102949
+        
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Reflection of the nightsky
@@ -79,6 +81,7 @@ function initializeWater() {
         time += 0.0075; // Speed of the waves
         requestAnimationFrame(drawWater);
     }
+
     
     drawWater();
 }
