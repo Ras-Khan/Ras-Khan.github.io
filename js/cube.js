@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Allow page scrolling if the cube is fully scrolled to the top or bottom
                 return;
             }
-
             // Prevent page scrolling and scroll only inside the cube
             event.preventDefault();
             cubeFaceBack.scrollTop += event.deltaY;
@@ -24,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
 const cube = document.querySelector(".glass_container");
 const root = document.documentElement;
 let isExpanded = false;
-let rotationInterval = null; // Hasn't started yet
+let rotationInterval = null; 
+
+const leftButton = document.querySelector(".nav_button.left");
+const rightButton = document.querySelector(".nav_button.right");
 
 let rotationX = 0;
 let rotationY = 0;
@@ -32,6 +34,7 @@ let rotationDirection = 1; // 1 for clockwise, -1 for counter-clockwise
 const minRotation = -15;
 const maxRotation = 15;
 const cubeElement = document.querySelector('.glass_cube');
+const closeButton = document.querySelector(".close_button");
 
 function startRotation() {
     cubeElement.style.transition = "top 1.6s"; // This fixes the rotation speed at the start for some reason
@@ -59,93 +62,109 @@ function rotateCube() {
 
 cube.addEventListener("click", () => {
     if (!isExpanded) {
-        stopRotation(); // Stop rotation before expansion
+        stopRotation();
         cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
+        cube.style.cursor = "auto";
 
-        // Reset rotation values
         rotationX = 0;
         rotationY = 0;
         cubeElement.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
 
         cube.style.transition = "top 0.8s cubic-bezier(0.25, 1.5, 0.25, 2)";
-        cube.style.top = "80%"; // Initial jump out of the water
-        cube.style.left = "50%"; // Keeps it centered
+        cube.style.top = "80%";
+        cube.style.left = "50%";
 
         setTimeout(() => {
             cube.style.zIndex = "6";
             cube.style.top = "85%"; 
         }, 600);
 
-        // First bounce + partial expansion
         setTimeout(() => {
             cube.style.top = "60%"; 
         }, 800);
 
-        // Second bounce 
         setTimeout(() => {
             cube.style.transition = "top 0.5s cubic-bezier(0.25, 1.5, 0.5, 1)";
             cube.style.top = "65%"; 
         }, 1500);
 
-        // Final size increase
         setTimeout(() => {
             root.style.setProperty("--cube-width", "1400px");
             root.style.setProperty("--cube-height", "700px");
+            closeButton.style.display = "block";
+            leftButton.style.display = "block"; 
+            rightButton.style.display = "block"; 
         }, 900);
 
-        // Immediately show the first project
         currentProjectIndex = 0;
         updateProjectContent(currentProjectIndex);
-        projectSlideshow = setInterval(() => nextProject("left"), 5000);
-
-    } else {
-        // Shrinking Sequence 
-        cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
-        cube.style.top = "75%"; 
-
-        setTimeout(() => {
-            cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
-            cube.style.top = "60%"; 
-            root.style.setProperty("--cube-width", "900px");
-            root.style.setProperty("--cube-height", "450px");
-        }, 100);
-
-        setTimeout(() => {
-            root.style.setProperty("--cube-width", "700px");
-            root.style.setProperty("--cube-height", "350px");
-        }, 800);
-
-        setTimeout(() => {
-            cubeElement.style.transition = "top 0.8s cubic-bezier(0.25, 1.2, 0.5, 1)";
-            cube.style.top = "100%"; 
-        }, 700);
-
-        setTimeout(() => {
-            cube.style.zIndex = "4"; // Reset z-index after shrinking
-        }, 500);
-        startRotation(); 
-
-        // Stop the project slideshow and restore the original content
-        clearInterval(projectSlideshow);
-        backFace.innerHTML = originalContent;
-        backFace.className = originalClasses; 
-        if (originalStyle) {
-            backFace.setAttribute("style", originalStyle); 
-        } else {
-            backFace.removeAttribute("style"); 
-        }
+        backFace.appendChild(closeButton);
     }
-    isExpanded = !isExpanded;
+    isExpanded = true;
 });
 
 
+closeButton.addEventListener("click", function (e) {
+    e.stopPropagation(); // No clicking while its being closed
+
+    cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
+    cube.style.top = "75%"; 
+
+    setTimeout(() => {
+        cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
+        cube.style.top = "60%"; 
+        root.style.setProperty("--cube-width", "900px");
+        root.style.setProperty("--cube-height", "450px");
+    }, 100);
+
+    setTimeout(() => {
+        root.style.setProperty("--cube-width", "700px");
+        root.style.setProperty("--cube-height", "350px");
+    }, 800);
+
+    setTimeout(() => {
+        cubeElement.style.transition = "top 0.8s cubic-bezier(0.25, 1.2, 0.5, 1)";
+        cube.style.top = "100%"; 
+    }, 700);
+
+    setTimeout(() => {
+        cube.style.zIndex = "4";
+    }, 500);
+
+    setTimeout(() => {
+        isExpanded = false; // Prevents expanding while its still shrinking
+    }, 1500);
 
 
+    startRotation();
+
+    backFace.innerHTML = originalContent; 
+    backFace.className = originalClasses;
+    if (originalStyle) {
+        backFace.setAttribute("style", originalStyle);
+    } else {
+        backFace.removeAttribute("style");
+    }
+
+    backFace.appendChild(closeButton);
+    closeButton.style.display = "none";
+    leftButton.style.display = "none"; 
+    rightButton.style.display = "none";
+    cube.style.cursor = "pointer";
+});
 
 
+leftButton.addEventListener("click", () => {
+    currentProjectIndex = (currentProjectIndex - 1 + projects.length) % projects.length;
+    nextProject("right"); 
+});
 
+rightButton.addEventListener("click", () => {
+    currentProjectIndex = (currentProjectIndex + 1) % projects.length;
+    nextProject("left"); 
+});
 
-// Project data
+// Project data, still W.I.P.
 const projects = [
     {
         "title": "Example project 1",
@@ -167,14 +186,11 @@ const projects = [
     }
 ];
 
-// Move to next or previous project
 let currentProjectIndex = 0;
 const backFace = document.querySelector(".glass_face.back");
-const originalContent = backFace.innerHTML; // Store initial content
-const originalClasses = backFace.className; // Store initial classes
-const originalStyle = backFace.getAttribute("style"); // Store inline styles (if any)
-
-
+const originalContent = backFace.innerHTML; 
+const originalClasses = backFace.className; 
+const originalStyle = backFace.getAttribute("style"); 
 
 
 function updateProjectContent(index) {
@@ -193,16 +209,16 @@ function nextProject(dir) {
     const currentProject = backFace.querySelector(".project_content");
     const direction = dir; 
 
-    // Add animation to slide
-    currentProject.style.animation = `slide_out_${direction} 1.00s forwards`;
+    // Disable Buttons Temporarily
+    leftButton.disabled = true;
+    rightButton.disabled = true;
 
-    currentProjectIndex = dir === "left" ? (currentProjectIndex + 1) % projects.length : 
-        (currentProjectIndex - 1 + projects.length) % projects.length;
+    currentProject.style.animation = `slide_out_${direction} 1.00s forwards`;
 
     // Prepare the new project and slide it in
     const newProject = document.createElement("div");
     newProject.classList.add("project_content", "project_type_1");
-    const project = projects[currentProjectIndex];
+    const project = projects[currentProjectIndex]; 
 
     newProject.innerHTML = `
         <h1>${project.title}</h1>
@@ -212,26 +228,23 @@ function nextProject(dir) {
     `;
 
     newProject.style.animation = `slide_in_${direction} 1.00s forwards`;
-    
+
     backFace.appendChild(newProject);
 
     setTimeout(() => {
         backFace.removeChild(currentProject);
-    }, 500); 
+        leftButton.disabled = false; 
+        rightButton.disabled = false;
+    }, 500);
 }
 
-// Init with the first project, then go in a rotation
-//updateProjectContent(currentProjectIndex);
-//setInterval(nextProject, 15000, "left"); // Switch projects every 5 seconds
 startRotation();
 
 
 
 
 
-
-
-
+/* // To move the cube with the mouse
 function initializeCube() {
     const cube = document.querySelector('.glass_cube');
 
@@ -272,4 +285,4 @@ function initializeCube() {
     // window.addEventListener('mousemove', onMouseMove);
     // window.addEventListener('mouseup', onMouseUp);
     
-}
+}*/
