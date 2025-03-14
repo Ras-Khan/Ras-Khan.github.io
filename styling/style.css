@@ -245,10 +245,7 @@ nav .nav_links li a {
     z-index: 4; /* Below water (z-index: 5) */
     pointer-events: none; 
     cursor: pointer;
-    
-    perspective: 4000px; /* Increased to reduce distortion */
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
+
 }
 
 
@@ -261,11 +258,6 @@ nav .nav_links li a {
     transform: rotateX(-10deg) rotateY(10deg);
     transform-origin: center; 
     transition: transform 1s ease-in, width 0.5s, height 0.5s, left 0.5s;
-
-    transform: rotateX(-10deg) rotateY(10deg) translateZ(0);
-    transform-style: preserve-3d;
-    will-change: transform;
-    image-rendering: pixelated; /* improves sharpness in Chrome */
 }
 
 .glass_face {
@@ -298,6 +290,7 @@ nav .nav_links li a {
     box-shadow: 
         0 8px 16px rgba(0, 0, 0, 0.2), 
         inset 0 0 20px rgba(255, 255, 255, 0.2); 
+        
 }
 
 .glass_face.front {
@@ -332,7 +325,7 @@ nav .nav_links li a {
         inset 0 0 10px rgba(247, 247, 247, 0.445),
         inset 0 -8px 10px rgba(185, 185, 185, 0.582);
     transform: rotate(10deg);
-    animation: shine 5s infinite ease-in-out;
+    animation: shine 7.5s infinite ease-in-out;
     pointer-events: none;
     z-index: 10; 
 }
@@ -654,15 +647,7 @@ nav .nav_links li a {
 .rect_top { transform: rotateX(90deg) translateZ(calc(var(--rect-depth) / 2)); }
 .rect_bottom { transform: rotateX(-90deg) translateZ(calc(var(--rect-height) - var(--rect-depth) / 2)); }
 
-/* Floating Animation */
-@keyframes floatRightToLeft {
-    from {
-        left: 100%;
-    }
-    to {
-        left: -10%;
-    }
-}
+
 
 
 
@@ -738,8 +723,6 @@ nav .nav_links li a {
     transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
 }
 
-
-
 #closeInterface {
     position: absolute;
     top: -2rem; 
@@ -811,8 +794,7 @@ nav .nav_links li a {
 
 
 
-
-
+  
 
 /***************************************************** Media queries ******************************************************/
 @media (min-width: 768px) {
@@ -1028,5 +1010,15 @@ nav .nav_links li a {
             100% 100%, 
             0% 100%
         );
+    }
+}
+
+/* Floating Animation */
+@keyframes floatRightToLeft {
+    from {
+        left: 100%;
+    }
+    to {
+        left: -10%;
     }
 }
