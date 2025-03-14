@@ -10,11 +10,14 @@ loadScript('js/hexagon.js', () => {
     loadScript('js/nightsky.js', () => {
         loadScript('js/water.js', () => {
             loadScript('js/cube.js', () => {
-                // Initialize everything
-                initializeHexagon();
-                initializeNightSky();
-                initializeWater();
-                initializeCube(); 
+                loadScript('js/floaters.js', () => {
+                    // Initialize everything
+                    initializeHexagon();
+                    initializeNightSky();
+                    initializeWater();
+                    initializeCube(); 
+                    initializeFloaters();
+                });
             });
         });
     });

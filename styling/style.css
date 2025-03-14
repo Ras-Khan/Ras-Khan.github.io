@@ -3,6 +3,10 @@
     --cube-width: 700px;
     --cube-height: 350px;
     --cube-depth: 20px;
+
+    --rect-width: 300px;  
+    --rect-height: 187.5px;  
+    --rect-depth: 15px;   
 }
 
 body {
@@ -201,13 +205,13 @@ nav .nav_links li a {
 
 .tape {
     position: fixed;
-    width: 120%;
+    width: 100%;
     /*transform: rotate(-25deg);
     top: 0;
     right: 0; (Temporarily inverted to not interfere with close button) */
-    transform: rotate(25deg);
-    top: 55rem;
-    right: -3rem;
+    transform: rotate(0deg);
+    top: 0;
+    right: 0;
     background-color: #FFC107;
     color: #FFF;
     font-weight: bold;
@@ -225,6 +229,8 @@ nav .nav_links li a {
     width: 100%;
 }
 
+
+
 /* 3D Glass Cube */
 .glass_container {
     display: flex;
@@ -233,12 +239,16 @@ nav .nav_links li a {
     height: 100vh;
     perspective: 2500px;
     position: absolute;
-    top: 100%;
+    top: 105%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 4; /* Below water (z-index: 5) */
     pointer-events: none; 
     cursor: pointer;
+    
+    perspective: 4000px; /* Increased to reduce distortion */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 
@@ -251,18 +261,24 @@ nav .nav_links li a {
     transform: rotateX(-10deg) rotateY(10deg);
     transform-origin: center; 
     transition: transform 1s ease-in, width 0.5s, height 0.5s, left 0.5s;
+
+    transform: rotateX(-10deg) rotateY(10deg) translateZ(0);
+    transform-style: preserve-3d;
+    will-change: transform;
+    image-rendering: pixelated; /* improves sharpness in Chrome */
 }
 
 .glass_face {
     position: absolute;
     background: rgba(255, 255, 255, 0.01);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px) saturate(180%);
+    /*backdrop-filter: blur(15px) saturate(180%);*/
     box-shadow:
         0 8px 16px rgba(0, 0, 0, 0.3),
         inset 0 0 10px rgba(255, 255, 255, 0.2),
         inset 0 -8px 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    
 }
 
 .glass_face.front {
@@ -277,7 +293,7 @@ nav .nav_links li a {
     box-sizing: border-box; 
     
     background: rgba(255, 255, 255, 0.075);
-    backdrop-filter: blur(10px) saturate(200%); 
+    /*backdrop-filter: blur(10px) saturate(200%); */
     border: 1px solid rgba(255, 255, 255, 0.3); 
     box-shadow: 
         0 8px 16px rgba(0, 0, 0, 0.2), 
@@ -313,10 +329,10 @@ nav .nav_links li a {
     backdrop-filter: blur(15px) saturate(180%);
     box-shadow:
         0 8px 16px rgba(0, 0, 0, 0.3),
-        inset 0 0 10px rgba(255, 255, 255, 0.2),
-        inset 0 -8px 10px rgba(0, 0, 0, 0.2);
+        inset 0 0 10px rgba(247, 247, 247, 0.445),
+        inset 0 -8px 10px rgba(185, 185, 185, 0.582);
     transform: rotate(10deg);
-    animation: shine 10s infinite ease-in-out;
+    animation: shine 5s infinite ease-in-out;
     pointer-events: none;
     z-index: 10; 
 }
@@ -329,7 +345,7 @@ nav .nav_links li a {
     box-sizing: border-box;
     position: absolute;
     background: rgba(255, 255, 255, 0.075);
-    backdrop-filter: blur(10px) saturate(200%);
+    backdrop-filter: blur(15px) saturate(200%);
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 
         0 8px 16px rgba(0, 0, 0, 0.2),
@@ -586,6 +602,217 @@ nav .nav_links li a {
     color: #666;
     margin: 0 10px 10px;
 }
+
+
+/* Floater */ 
+#floatingRectangle {
+    position: absolute;
+    bottom: 10%;
+    left: 100%;
+    width: var(--rect-width);
+    height: var(--rect-height);
+    transform-style: preserve-3d;
+    transform: rotateX(45deg) rotateY(0deg) rotateZ(-30deg);
+    cursor: pointer;
+    perspective: 20000px;
+    z-index: 6;
+}
+
+.rect_face {
+    position: absolute;
+    box-shadow: none; 
+}
+
+.rect_back { background: #101010; }
+.rect_left, .rect_right { background: #080808;}
+.rect_top { background: #181818; }
+.rect_bottom { background: #050505; }
+
+.rect_front {
+    background: url('../img/placeholder_1920x1080.png') center/cover no-repeat;
+}
+
+.rect_front, .rect_back {
+    width: var(--rect-width);
+    height: var(--rect-height);
+}
+
+.rect_left, .rect_right {
+    width: var(--rect-depth);
+    height: var(--rect-height);
+}
+
+.rect_top, .rect_bottom {
+    width: var(--rect-width);
+    height: var(--rect-depth);
+}
+
+.rect_front { transform: translateZ(calc(var(--rect-depth) / 2)); }
+.rect_back { transform: rotateY(180deg) translateZ(calc(var(--rect-depth) / 2)); }
+.rect_left { transform: rotateY(-90deg) translateZ(calc(var(--rect-depth) / 2)); }
+.rect_right { transform: rotateY(90deg) translateZ(calc(var(--rect-width) - var(--rect-depth) / 2)); }
+.rect_top { transform: rotateX(90deg) translateZ(calc(var(--rect-depth) / 2)); }
+.rect_bottom { transform: rotateX(-90deg) translateZ(calc(var(--rect-height) - var(--rect-depth) / 2)); }
+
+/* Floating Animation */
+@keyframes floatRightToLeft {
+    from {
+        left: 100%;
+    }
+    to {
+        left: -10%;
+    }
+}
+
+
+
+
+
+/* Floating Interface */
+#floatingInterface {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 750px;
+    height: 425px;
+    background: rgba(10, 10, 10, 0.75);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    display: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+#floatingInterfaceContent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    color: white;
+    opacity: 1;
+}
+
+#floatingInterfaceContent h2,
+#floatingInterfaceContent p {
+    color: #ffffff; 
+    font-size: 1.5rem;
+    text-shadow:
+        0 0 4px #006849,
+        0 0 4px #239170,
+        0 0 4px #1bd69e;
+}
+
+#floatingInterfaceContent h2 {
+    margin-top: 0;
+    font-size: 3rem;
+    text-shadow:
+        0 0 4px #006849,
+        0 0 8px #239170,
+        0 0 12px #1bd69e;
+}
+
+#floatingInterfaceContent > a {
+    text-decoration: none;
+}
+
+#floatingInterfaceContent > a > p > img {
+    width: auto;
+    height: 1.25rem;
+    text-align: left;
+    margin-bottom: -2px;
+}
+
+#floatingInterfaceContent > a:hover h2,
+#floatingInterfaceContent > a:hover p {
+    color: #8f0088;
+    text-shadow:
+        0 0 4px #6b0066,
+        0 0 8px #6b0066,
+        0 0 12px #6b0066;
+    transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+
+
+#closeInterface {
+    position: absolute;
+    top: -2rem; 
+    right: 30px;
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+#closeInterface:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+
+/* Top and Bottom Bars */
+#floatingInterfaceTopBar,
+#floatingInterfaceBottomBar {
+    position: absolute;
+    left: 0;
+    width: calc(100% + 30px);
+    height: 25px;
+    z-index: 10;
+}
+
+#floatingInterfaceTopBar {
+    background: linear-gradient(to right, #87009b, #52005e);
+    top: 50%;
+    transform: translateY(0);
+}
+
+#floatingInterfaceBottomBar {
+    background: linear-gradient(to right, #009a7c, #00dfb2);
+    bottom: 50%;
+    transform: translateY(0);
+}
+
+#floatingInterface.opening #floatingInterfaceTopBar {
+    transform: translateY(-100%);
+}
+
+#floatingInterface.opening #floatingInterfaceBottomBar {
+    transform: translateY(100%);
+}
+
+#floatingInterface.opening #floatingInterfaceContent {
+    opacity: 1;
+}
+
+#floatingInterface.closing #floatingInterfaceTopBar,
+#floatingInterface.closing #floatingInterfaceBottomBar {
+    transform: translateY(0);
+}
+
+#floatingInterface.closing #floatingInterfaceContent {
+    opacity: 0;
+}
+
+
+
+
+
 
 /***************************************************** Media queries ******************************************************/
 @media (min-width: 768px) {
