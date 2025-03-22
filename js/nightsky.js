@@ -6,6 +6,7 @@ function initializeNightSky() {
     let stars = [];
     let supernovaParticles = [];
     let mouseX = null, mouseY = null;
+    let shootingStars = [];
 
     const resizeCanvas = () => {
         canvas.width = window.innerWidth;
@@ -35,6 +36,7 @@ function initializeNightSky() {
         }));
     };
 
+    // Redundant function, might use in the future
     const createSupernova = (star) => {
         const initialRadius = star.radius; // Base radius
     
@@ -58,7 +60,25 @@ function initializeNightSky() {
         supernovaParticles.push(...particles);
         star.remove = true;
     };
-    
+
+    const createShootingStar = () => {
+        if (stars.length === 0) return;
+        let randomStar = stars[Math.floor(Math.random() * stars.length)];
+        let direction = Math.random() < 0.5 ? -1 : 1;
+        shootingStars.push({
+            x: randomStar.x,
+            y: randomStar.y,
+            radius: randomStar.radius,
+            vx: direction * (4 + Math.random() * 4),
+            vy: (Math.random() - 0.5) * 2,
+            alpha: 1,
+            color: randomStar.color
+        });
+
+        console.log("Shooting star: ", shootingStars);
+    };
+
+   
     const drawNightSky = () => {
         context.clearRect(0, 0, canvas.width, canvas.height);
         const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
@@ -82,49 +102,48 @@ function initializeNightSky() {
         stars = stars.filter(star => !star.remove);
 
         stars.forEach(star => {
-            if (!star.exploding) {
-                star.alpha += star.alphaChange;
-                if (star.alpha <= 0 || star.alpha >= 1) star.alphaChange *= -1;
+            star.alpha += star.alphaChange;
+            if (star.alpha <= 0 || star.alpha >= 1) star.alphaChange *= -1;
+    
+            const isConnected = connectedStars.includes(star);
+            context.fillStyle = `${star.color}${isConnected ? 3 : star.alpha})`;
+            context.shadowBlur = isConnected ? 12 : 8;
+            context.shadowColor = `${star.color}1)`;
+            context.beginPath();
+            context.arc(star.x, star.y, isConnected ? star.radius + 1.5 : star.radius, 0, Math.PI * 2);
+            context.fill();
+        });
 
-                const isConnected = connectedStars.includes(star);
-                context.fillStyle = `${star.color}${isConnected ? 3 : star.alpha})`;
-                context.shadowBlur = isConnected ? 12 : 8;
-                context.shadowColor = `${star.color}1)`;
+        shootingStars.forEach((star, index) => {
+            // Moving the shooting star
+            star.x += star.vx;
+            star.y += star.vy;
+            star.alpha -= 0.005;  
+
+            // Add a trail on the shooting star
+            if (star.alpha > 0) {
+                const gradient = context.createLinearGradient(star.x, star.y, star.x - star.vx * 10, star.y - star.vy * 10);
+                gradient.addColorStop(0, `${star.color}${star.alpha})`);
+                gradient.addColorStop(1, `${star.color}0)`);
+
+                context.strokeStyle = gradient;
+                context.lineWidth = star.radius + 0.8;
+                context.lineCap = 'round';
+
                 context.beginPath();
-                context.arc(star.x, star.y, isConnected ? star.radius + 1.5 : star.radius, 0, Math.PI * 2);
-                context.fill();
+                context.moveTo(star.x, star.y);
+                context.lineTo(star.x - star.vx * 10, star.y - star.vy * 10);
+                context.stroke();
             } else {
-                star.radius += 0.05;
-                context.fillStyle = `${star.color}1)`;
-                context.shadowBlur = 15;
-                context.shadowColor = `${star.color}1)`;
-                context.beginPath();
-                context.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-                context.fill();
-
-                if (star.radius > 3) createSupernova(star);
+                shootingStars.splice(index, 1); // Remove it again
             }
         });
 
-        supernovaParticles.forEach((particle, index) => {
-            particle.x += particle.vx;
-            particle.y += particle.vy;
-            particle.alpha -= 0.005;
-            if (particle.alpha > 0) {
-                context.fillStyle = `rgba(255, 255, 255, ${particle.alpha})`;
-                context.beginPath();
-                context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-                context.fill();
-            } else {
-                supernovaParticles.splice(index, 1);
-            }
-        });
-
-        // Random chance for a supernova trigger
-        if (Math.random() < 0.001 && stars.length > 0) { 
-            let randomStar = stars[Math.floor(Math.random() * stars.length)];
-            randomStar.exploding = true; 
+        // Chance to trigger shooting star
+        if (Math.random() < 0.002 && stars.length > 0) {
+            createShootingStar();
         }
+
         requestAnimationFrame(drawNightSky);
     };
 
