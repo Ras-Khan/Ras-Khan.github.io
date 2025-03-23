@@ -3,99 +3,171 @@ function initializeWater() {
     const canvas = document.getElementById("waterCanvas");
     const ctx = canvas.getContext("2d");
 
-    const buffer1 = document.createElement("canvas");
-    const buffer2 = document.createElement("canvas");
-    const blended = document.createElement("canvas");
-
-    const bctx1 = buffer1.getContext("2d");
-    const bctx2 = buffer2.getContext("2d");
-    const bctx = blended.getContext("2d");
-
-    const res = 512;
-    buffer1.width = buffer2.width = blended.width = res;
-    buffer1.height = buffer2.height = blended.height = res;
-
-    const normal1 = new Image();
-    const normal2 = new Image();
-
+    const waveHeight = 15;
+    const cols = 80;
+    const rows = 60;
+    const inc = 0.01;
     let offsetX = 0;
     let offsetY = 0;
-    const speed = 0.4;
+    let mesh = [];
 
-    normal1.crossOrigin = "anonymous";
-    normal2.crossOrigin = "anonymous";
-    normal1.src = "img/Water_Normal_1.jpg";
-    normal2.src = "img/Water_Normal_2.jpg";
-    
+    const nightSky = document.getElementById("nightSky");
+    const skyCanvas = document.createElement("canvas");
+    const skyCtx = skyCanvas.getContext("2d");
 
-    Promise.all([
-        new Promise((res) => (normal1.onload = res)),
-        new Promise((res) => (normal2.onload = res))
-    ]).then(() => {
-        draw();
-    });
-
-    function blendNormals() {
-        bctx.clearRect(0, 0, res, res);
-
-        bctx1.clearRect(0, 0, res, res);
-        bctx1.drawImage(normal1, offsetX % res, offsetY % res, res, res, 0, 0, res, res);
-
-        bctx2.clearRect(0, 0, res, res);
-        bctx2.drawImage(normal2, (offsetX + res / 2) % res, (offsetY + res / 2) % res, res, res, 0, 0, res, res);
-
-        const imgData1 = bctx1.getImageData(0, 0, res, res).data;
-        const imgData2 = bctx2.getImageData(0, 0, res, res).data;
-        const imgOut = bctx.createImageData(res, res);
-
-        for (let i = 0; i < imgData1.length; i += 4) {
-            imgOut.data[i] = (imgData1[i] + imgData2[i]) >> 1;     // R
-            imgOut.data[i + 1] = (imgData1[i + 1] + imgData2[i + 1]) >> 1; // G
-            imgOut.data[i + 2] = (imgData1[i + 2] + imgData2[i + 2]) >> 1; // B
-            imgOut.data[i + 3] = 255; // Alpha
-        }
-
-        bctx.putImageData(imgOut, 0, 0);
+    function noise(x, y) {
+        return (Math.sin(x * 2.1 + y * 0.7) + Math.sin(x * 0.3 - y * 1.3)) * 0.5;
     }
 
-    function draw() {
-        offsetX += speed;
-        offsetY -= speed;
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight * 0.5;
+    }
 
-        blendNormals();
+    function captureNightSky() {
+        if (!nightSky) return;
+        const skyContext = nightSky.getContext("2d");
+        if (!skyContext) return;
 
+        skyCanvas.width = nightSky.clientWidth;
+        skyCanvas.height = nightSky.clientHeight;
+        skyCtx.drawImage(skyContext.canvas, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function generateMesh() {
+        mesh = [];
+        const gridWidth = canvas.width / cols;
+        const gridHeight = canvas.height / rows;
+
+        for (let col = 0; col < cols; col++) {
+            for (let row = 0; row < rows; row++) {
+                mesh.push([
+                    { x: col * gridWidth, y: row * gridHeight + gridHeight },
+                    { x: col * gridWidth, y: row * gridHeight },
+                    { x: col * gridWidth + gridWidth, y: row * gridHeight },
+                ]);
+                mesh.push([
+                    { x: col * gridWidth + gridWidth, y: row * gridHeight },
+                    { x: col * gridWidth + gridWidth, y: row * gridHeight + gridHeight },
+                    { x: col * gridWidth, y: row * gridHeight + gridHeight },
+                ]);
+            }
+        }
+    }
+
+    function addNoise() {
+        for (let m = 0; m < mesh.length; m++) {
+            const poly = mesh[m];
+            for (let p = 0; p < poly.length; p++) {
+                const point = poly[p];
+                point.y += waveHeight * noise((point.x / 50) + offsetX, (point.y / 50) + offsetY);
+            }
+        }
+    }
+
+    
+
+    
+
+    function drawReflection() {
+        captureNightSky();
+
+        const stripHeight = 3;
+        ctx.save();
+        ctx.globalAlpha = 0.15;
+        ctx.scale(1, -1);
+
+        for (let y = 0; y < canvas.height; y += stripHeight) {
+            const depthFactor = y / canvas.height;
+            const distortion = noise((y + offsetX * 100) * 0.01, offsetY * 10) * 20 * (0.3 + depthFactor * 1.2);
+            ctx.drawImage(
+                skyCanvas,
+                0, y, canvas.width, stripHeight,
+                distortion * depthFactor, -canvas.height + y,
+                canvas.width * (1 + depthFactor * 0.2),
+                stripHeight
+            );
+        }
+
+        ctx.restore();
+    }
+
+    function drawWaterSurface() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
         gradient.addColorStop(0, "rgba(58, 112, 183, 0.80)");
         gradient.addColorStop(1, "rgba(16, 41, 73, 1.00)");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
+    
+    function drawWaves() {
+        const waveResolution = 10; // larger blocks for performance
+    
         ctx.save();
-        const resX = canvas.width / res;
-        const resY = canvas.height / res;
-
-        const blendedData = bctx.getImageData(0, 0, res, res).data;
-
-        for (let y = 0; y < canvas.height; y += 6) {
-            for (let x = 0; x < canvas.width; x += 6) {
-                const u = Math.floor(x / resX);
-                const v = Math.floor(y / resY);
-                const i = (v * res + u) * 4;
-
-                const r = blendedData[i];     // X-direction
-                const b = blendedData[i + 2]; // Z-depth
-
-                const brightness = ((r - 128) + (b - 128)) * 0.4;
-
-                ctx.fillStyle = `rgba(255,255,255,${0.03 + brightness * 0.002})`;
-                ctx.fillRect(x, y, 6, 6);
+    
+        for (let y = 0; y < canvas.height; y += waveResolution) {
+            const noiseY = (y / 60) + offsetY;
+    
+            for (let x = 0; x < canvas.width; x += waveResolution) {
+                const displacement = noise((x / 60) + offsetX, noiseY);
+    
+                // Stronger effect: higher brightness shift
+                const brightness = Math.floor(80 + displacement * 100); // ↑ stronger curve
+                const r = 40 + brightness * 0.5;
+                const g = 120 + brightness * 0.6;
+                const b = 180 + brightness * 0.4;
+    
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.12)`; // ↑ stronger opacity
+                ctx.fillRect(x, y, waveResolution, waveResolution);
             }
         }
-
+    
         ctx.restore();
-
-        requestAnimationFrame(draw);
     }
+    
+    function drawReflectionRipples() {
+        ctx.save();
+        ctx.globalAlpha = 0.08; // Soft overlay
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.lineWidth = 1.2;
+    
+        const rippleSpacing = 8;
+        for (let y = 0; y < canvas.height; y += rippleSpacing) {
+            ctx.beginPath();
+            for (let x = 0; x <= canvas.width; x += 10) {
+                const displacement = noise((x / 50) + offsetX, (y / 50) + offsetY);
+                const rippleY = y + displacement * 6;
+    
+                if (x === 0) ctx.moveTo(x, rippleY);
+                else ctx.lineTo(x, rippleY);
+            }
+            ctx.stroke();
+        }
+    
+        ctx.restore();
+    }
+    
+
+
+    function animate() {
+        offsetX += inc;
+        offsetY -= inc;
+
+        drawWaterSurface();
+        drawReflection();
+
+        drawWaves();
+        drawReflectionRipples();
+
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
 }
