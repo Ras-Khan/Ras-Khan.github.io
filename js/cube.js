@@ -40,7 +40,7 @@ function initializeCube() {
     function startRotation() {
         cubeElement.style.transition = "top 1.6s"; // This fixes the rotation speed at the start for some reason
         if (!rotationInterval) {
-            rotationInterval = setInterval(rotateCube, 20);
+            rotationInterval = setInterval(rotateCube, 50);
         }
     }
 

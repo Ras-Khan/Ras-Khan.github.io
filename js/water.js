@@ -1,88 +1,101 @@
+
 function initializeWater() {
     const canvas = document.getElementById("waterCanvas");
     const ctx = canvas.getContext("2d");
 
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight * 0.5;
-    }
+    const buffer1 = document.createElement("canvas");
+    const buffer2 = document.createElement("canvas");
+    const blended = document.createElement("canvas");
 
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    const bctx1 = buffer1.getContext("2d");
+    const bctx2 = buffer2.getContext("2d");
+    const bctx = blended.getContext("2d");
 
-    let time = 0;
+    const res = 512;
+    buffer1.width = buffer2.width = blended.width = res;
+    buffer1.height = buffer2.height = blended.height = res;
 
-    const nightSky = document.getElementById("nightSky");
-    const skyCanvas = document.createElement("canvas");
-    const skyCtx = skyCanvas.getContext("2d");
+    const normal1 = new Image();
+    const normal2 = new Image();
 
-    function captureNightSky() {
-        skyCanvas.width = nightSky.clientWidth;
-        skyCanvas.height = nightSky.clientHeight;
-        const skyContext = nightSky.getContext("2d");
-        skyCtx.drawImage(skyContext.canvas, 0, 0);
-    }
+    let offsetX = 0;
+    let offsetY = 0;
+    const speed = 0.4;
 
-
-    function waveDistortion(x, y) {
-        return (
-            Math.sin((x + time * 2) * 0.025) * 15 +  // Larger waves
-            Math.sin((y + time * 1.5) * 0.018) * 8 +  // Mid-level detail
-            Math.sin((x * 0.01 + y * 0.01 + time * 3) * 12) * 4  // Small ripples 
-        );
-    }
+    normal1.crossOrigin = "anonymous";
+    normal2.crossOrigin = "anonymous";
+    normal1.src = "img/Water_Normal_1.jpg";
+    normal2.src = "img/Water_Normal_2.jpg";
     
-    function drawWater() {
+
+    Promise.all([
+        new Promise((res) => (normal1.onload = res)),
+        new Promise((res) => (normal2.onload = res))
+    ]).then(() => {
+        draw();
+    });
+
+    function blendNormals() {
+        bctx.clearRect(0, 0, res, res);
+
+        bctx1.clearRect(0, 0, res, res);
+        bctx1.drawImage(normal1, offsetX % res, offsetY % res, res, res, 0, 0, res, res);
+
+        bctx2.clearRect(0, 0, res, res);
+        bctx2.drawImage(normal2, (offsetX + res / 2) % res, (offsetY + res / 2) % res, res, res, 0, 0, res, res);
+
+        const imgData1 = bctx1.getImageData(0, 0, res, res).data;
+        const imgData2 = bctx2.getImageData(0, 0, res, res).data;
+        const imgOut = bctx.createImageData(res, res);
+
+        for (let i = 0; i < imgData1.length; i += 4) {
+            imgOut.data[i] = (imgData1[i] + imgData2[i]) >> 1;     // R
+            imgOut.data[i + 1] = (imgData1[i + 1] + imgData2[i + 1]) >> 1; // G
+            imgOut.data[i + 2] = (imgData1[i + 2] + imgData2[i + 2]) >> 1; // B
+            imgOut.data[i + 3] = 255; // Alpha
+        }
+
+        bctx.putImageData(imgOut, 0, 0);
+    }
+
+    function draw() {
+        offsetX += speed;
+        offsetY -= speed;
+
+        blendNormals();
+
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-        // Water gradient
+
         let gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, "rgba(58, 112, 183, 0.80)");   // #3a70b7
-        gradient.addColorStop(0.1, "rgba(47, 94, 155, 0.90)");  // #2f5e9b
-        gradient.addColorStop(0.3, "rgba(47, 94, 155, 0.99)");  // #2f5e9b
-        gradient.addColorStop(0.6, "rgba(35, 76, 128, 0.99)");  // #234c80
-        gradient.addColorStop(0.85, "rgba(26, 58, 102, 0.99)"); // #1a3a66
-        gradient.addColorStop(1, "rgba(16, 41, 73, 1.00)");     // #102949
-        
+        gradient.addColorStop(0, "rgba(58, 112, 183, 0.80)");
+        gradient.addColorStop(1, "rgba(16, 41, 73, 1.00)");
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        // Reflection of the nightsky
-        captureNightSky();
-            
-        let reflectionOpacity = 0.15;
+
         ctx.save();
-        ctx.globalAlpha = reflectionOpacity;
-        ctx.scale(1, -1);
+        const resX = canvas.width / res;
+        const resY = canvas.height / res;
 
-        for (let y = 0; y < canvas.height; y += 3) {
-            let depthFactor = y / canvas.height; // More distortion at the bottom
-            let distortion = waveDistortion(0, y) * (0.3 + depthFactor * 1.2); // Increases gradually
-            ctx.drawImage(skyCanvas, 0, y, canvas.width, 3, distortion * depthFactor, -canvas.height + y, canvas.width * (1 + depthFactor * 0.2), 3);
-        }
-        ctx.restore();
+        const blendedData = bctx.getImageData(0, 0, res, res).data;
 
-        // Making waves more visible
-        ctx.save();
-        ctx.globalAlpha = 0.15;
+        for (let y = 0; y < canvas.height; y += 6) {
+            for (let x = 0; x < canvas.width; x += 6) {
+                const u = Math.floor(x / resX);
+                const v = Math.floor(y / resY);
+                const i = (v * res + u) * 4;
 
-        for (let x = 0; x < canvas.width; x += Math.random() * 6 + 10) { 
-            for (let y = 0; y < canvas.height; y += Math.random() * 6 + 10) {
-                let distortionX = waveDistortion(x, y) * 1.5; 
-                let distortionY = waveDistortion(y, x) * 1.2; 
+                const r = blendedData[i];     // X-direction
+                const b = blendedData[i + 2]; // Z-depth
 
-                ctx.fillStyle = "rgba(255, 255, 255, 0.04)"; 
-                ctx.beginPath();
-                ctx.arc(x + distortionX, y + distortionY, 8 + Math.sin(time * 0.5 + y * 0.015) * 4, 0, Math.PI * 2);
-                ctx.fill();
+                const brightness = ((r - 128) + (b - 128)) * 0.4;
+
+                ctx.fillStyle = `rgba(255,255,255,${0.03 + brightness * 0.002})`;
+                ctx.fillRect(x, y, 6, 6);
             }
         }
+
         ctx.restore();
 
-        time += 0.0075; // Speed of the waves
-        requestAnimationFrame(drawWater);
+        requestAnimationFrame(draw);
     }
-
-    
-    drawWater();
 }
-
