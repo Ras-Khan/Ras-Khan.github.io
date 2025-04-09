@@ -44,6 +44,13 @@ function initializeCube() {
         }
     }
 
+    function pauseRotation() {
+        if (rotationInterval) {
+            clearInterval(rotationInterval);
+            rotationInterval = null;
+        }
+    }
+    
     function stopRotation() {
         clearInterval(rotationInterval);
         rotationY = 0;
@@ -164,6 +171,17 @@ function initializeCube() {
         currentProjectIndex = (currentProjectIndex + 1) % projects.length;
         nextProject("left"); 
     });
+
+    cube.addEventListener("mouseenter", () => {
+        if (!isExpanded) pauseRotation();
+    });
+
+    cube.addEventListener("mouseleave", () => {
+        if (!isExpanded) startRotation();
+    });
+
+
+
 
     // Project data, still W.I.P.
     const projects = [

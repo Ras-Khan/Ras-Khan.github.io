@@ -22,6 +22,132 @@ body {
     overflow: hidden; /* Prevents scrolling */
 }
 
+/* Loading screen */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transform: translateY(0);
+}
+
+#loadingOverlay.lift {
+    animation: liftOverlay 2.0s ease-in forwards;
+}
+
+#loadingBarContainer {
+    position: absolute;
+    bottom: 60px;
+    width: 60%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#loadingBar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #ffe28a, #ffffff);
+    transition: width 0.2s ease;
+    will-change: width; 
+}
+
+#logo3DWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1600px;
+    perspective-origin: center top;
+
+}
+
+#logo3D {
+    width: 300px;
+    height: 400px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spinLogo 4s linear infinite; /* Delayed start */
+    transform-origin: center;
+    will-change: transform;
+    transform: translateZ(0);
+}
+  
+ 
+.logo_half {
+    position: absolute;
+    width: 300px;
+    height: 400px;
+    transform-style: preserve-3d;
+}
+
+/* Frontside green side*/
+.logo_half.left {
+    background: linear-gradient(to bottom, rgba(0, 155, 128, 1), rgba(0, 105, 88, 1));
+    clip-path: polygon(
+         0% 0%,   95% 0%, 100% 5%, 100% 53%,
+        90% 43%,  60% 43%, 90% 70%, 100% 70%,
+        100% 100%,  40% 40%, 40% 30%,  80% 30%,
+        85% 25%,  85% 15%, 80% 10%,  30% 10%,
+        25% 15%,  25% 25%
+    );
+    transform:  translateX(-165px) translateZ(0px);
+}
+    
+/* Backside green side */
+.logo_half.right {
+    background: linear-gradient(to bottom, rgb(0, 116, 96), rgb(0, 85, 71));
+    clip-path: polygon(
+        100%   0%, 5%   0%,  0%  5%,  0% 53%, 
+        10%   43%, 40% 43%, 10% 70%,  0% 70%, 
+        0%   100%, 60% 40%, 60% 30%, 20% 30%, 
+        15%   25%, 15% 15%, 20% 10%, 70% 10%, 
+        75%   15%, 75% 25%
+    );
+    transform: translateX(-165px) rotateY(180deg) translateZ(30px);
+}
+  
+/* Frontside purple side */ 
+.logo_half.mirror_left {
+    background: linear-gradient(to bottom, rgba(128, 0, 155, 1), rgba(90, 0, 110, 1));
+    clip-path: polygon(
+        100% 0%,   5% 0%, 0% 5%, 0% 53%,
+        10% 43%,  40% 43%, 10% 70%, 0% 70%,
+        0% 100%,  60% 40%, 60% 30%,  20% 30%,
+        15% 25%,  15% 15%, 20% 10%,  70% 10%,
+        75% 15%,  75% 25%
+    );
+    transform: translateX(165px) rotateY(180deg) translateZ(0px) scaleX(-1);
+}
+
+/* Backside purple side */ 
+.logo_half.mirror_right {
+    background: linear-gradient(to bottom, rgb(110, 0, 130), rgb(70, 0, 90));
+    clip-path: polygon(
+        0% 0%,   95% 0%, 100% 5%, 100% 53%,
+        90% 43%,  60% 43%, 90% 70%, 100% 70%,
+        100% 100%,  40% 40%, 40% 30%,  80% 30%,
+        85% 25%,  85% 15%, 80% 10%,  30% 10%,
+        25% 15%,  25% 25%
+    );
+    transform: translateX(165px) rotateY(180deg) translateZ(30px);
+}
+
+.logo_extrude_face {
+    position: absolute;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+
 header {
     position: sticky;
     top: 0;
@@ -229,8 +355,6 @@ nav .nav_links li a {
     width: 100%;
 }
 
-
-
 /* 3D Glass Cube */
 .glass_container {
     display: flex;
@@ -247,8 +371,6 @@ nav .nav_links li a {
     cursor: pointer;
 
 }
-
-
 
 .glass_cube {
     width: var(--cube-width);
@@ -484,9 +606,6 @@ nav .nav_links li a {
     pointer-events: all;
 }
 
-
-
-
 /* Project stuff */
 .project_content {
     position: absolute;
@@ -608,7 +727,7 @@ nav .nav_links li a {
     transform: rotateX(45deg) rotateY(0deg) rotateZ(-30deg);
     cursor: pointer;
     perspective: 20000px;
-    z-index: 6;
+    z-index: 7;
 }
 
 .rect_face {
@@ -646,12 +765,6 @@ nav .nav_links li a {
 .rect_right { transform: rotateY(90deg) translateZ(calc(var(--rect-width) - var(--rect-depth) / 2)); }
 .rect_top { transform: rotateX(90deg) translateZ(calc(var(--rect-depth) / 2)); }
 .rect_bottom { transform: rotateX(-90deg) translateZ(calc(var(--rect-height) - var(--rect-depth) / 2)); }
-
-
-
-
-
-
 
 /* Floating Interface */
 #floatingInterface {
@@ -748,7 +861,6 @@ nav .nav_links li a {
     transform: scale(1.1);
 }
 
-
 /* Top and Bottom Bars */
 #floatingInterfaceTopBar,
 #floatingInterfaceBottomBar {
@@ -792,8 +904,33 @@ nav .nav_links li a {
     opacity: 0;
 }
 
+.hover_highlight_beam {
+    position: absolute;
+    width: 300px;
+    height: auto;
+    transform: translate(-50%, 0);
+    background: linear-gradient(to top, rgba(255, 223, 120, 0.2), rgba(255, 236, 160, 0.03));
+    pointer-events: none;
+    filter: blur(14px) brightness(1.3) saturate(1.4);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease;
+    z-index: 5;
+    mix-blend-mode: screen;
+    overflow: visible;
+    border-radius: 150px;
+}
 
 
+.hover_ray {
+    position: absolute;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to top, rgba(223, 0, 0, 0.973), rgba(255, 255, 255, 0));
+    animation-name: rayFlicker;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
   
 
 /***************************************************** Media queries ******************************************************/
@@ -1020,5 +1157,43 @@ nav .nav_links li a {
     }
     to {
         left: -10%;
+    }
+}
+
+@keyframes rayFlicker {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.02;
+    }
+}
+
+@keyframes liftOverlay {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+
+
+@keyframes spinLogo {
+    from { transform: rotateY(0deg); }
+    to   { transform: rotateY(360deg); }
+}  
+  
+@keyframes logoIntro {
+    0% {
+        transform: rotateX(60deg) translateY(-200px);
+        opacity: 0;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        transform: rotateX(25deg) translateY(0px);
     }
 }

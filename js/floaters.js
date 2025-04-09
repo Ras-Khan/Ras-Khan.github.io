@@ -9,8 +9,9 @@ function initializeFloaters() {
         <div class="rect_face rect_top"></div>
         <div class="rect_face rect_bottom"></div>
     `;
-    document.body.appendChild(rectangle);
 
+    document.body.appendChild(rectangle);
+    const frontFace = rectangle.querySelector('.rect_front');
     const floatingInterface = document.createElement("div");
     floatingInterface.id = "floatingInterface";
     floatingInterface.style.display = "none";
@@ -133,6 +134,22 @@ function initializeFloaters() {
             closeInterface();
         }
     });
+
+
+    frontFace.addEventListener("mouseenter", () => {
+        if (!interfaceOpen) {
+            moving = false;
+            cancelAnimationFrame(animationFrame);
+        }
+    });
+    
+    frontFace.addEventListener("mouseleave", () => {
+        if (!interfaceOpen) {
+            moving = true;
+            animateFloating();
+        }
+    });
+    
 
     animateFloating();
 }

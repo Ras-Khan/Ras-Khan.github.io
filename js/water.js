@@ -3,21 +3,22 @@ function initializeWater() {
     const canvas = document.getElementById("waterCanvas");
     const ctx = canvas.getContext("2d");
 
-    const waveHeight = 15;
-    const cols = 80;
-    const rows = 60;
     const inc = 0.01;
     let offsetX = 0;
     let offsetY = 0;
-    let mesh = [];
 
     const nightSky = document.getElementById("nightSky");
     const skyCanvas = document.createElement("canvas");
     const skyCtx = skyCanvas.getContext("2d");
 
     function noise(x, y) {
-        return (Math.sin(x * 2.1 + y * 0.7) + Math.sin(x * 0.3 - y * 1.3)) * 0.5;
+        return (
+            Math.sin(x * 2.1 + y * 0.7) +
+            Math.sin(x * 0.3 - y * 1.3 + Math.cos(x * 0.02 + y * 0.01)) +
+            Math.sin(x * 0.5 + y * 0.6)
+        ) * 0.33;
     }
+    
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -37,42 +38,7 @@ function initializeWater() {
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
-    function generateMesh() {
-        mesh = [];
-        const gridWidth = canvas.width / cols;
-        const gridHeight = canvas.height / rows;
-
-        for (let col = 0; col < cols; col++) {
-            for (let row = 0; row < rows; row++) {
-                mesh.push([
-                    { x: col * gridWidth, y: row * gridHeight + gridHeight },
-                    { x: col * gridWidth, y: row * gridHeight },
-                    { x: col * gridWidth + gridWidth, y: row * gridHeight },
-                ]);
-                mesh.push([
-                    { x: col * gridWidth + gridWidth, y: row * gridHeight },
-                    { x: col * gridWidth + gridWidth, y: row * gridHeight + gridHeight },
-                    { x: col * gridWidth, y: row * gridHeight + gridHeight },
-                ]);
-            }
-        }
-    }
-
-    function addNoise() {
-        for (let m = 0; m < mesh.length; m++) {
-            const poly = mesh[m];
-            for (let p = 0; p < poly.length; p++) {
-                const point = poly[p];
-                point.y += waveHeight * noise((point.x / 50) + offsetX, (point.y / 50) + offsetY);
-            }
-        }
-    }
-
-    
-
-    
-
-    function drawReflection() {
+     function drawReflection() {
         captureNightSky();
 
         const stripHeight = 3;
@@ -107,8 +73,7 @@ function initializeWater() {
 
     
     function drawWaves() {
-        const waveResolution = 10; // larger blocks for performance
-    
+        const waveResolution = 10; 
         ctx.save();
     
         for (let y = 0; y < canvas.height; y += waveResolution) {
@@ -117,13 +82,12 @@ function initializeWater() {
             for (let x = 0; x < canvas.width; x += waveResolution) {
                 const displacement = noise((x / 60) + offsetX, noiseY);
     
-                // Stronger effect: higher brightness shift
-                const brightness = Math.floor(80 + displacement * 100); // ↑ stronger curve
+                const brightness = Math.floor(80 + displacement * 100); 
                 const r = 40 + brightness * 0.5;
                 const g = 120 + brightness * 0.6;
                 const b = 180 + brightness * 0.4;
     
-                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.12)`; // ↑ stronger opacity
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.12)`; 
                 ctx.fillRect(x, y, waveResolution, waveResolution);
             }
         }
@@ -133,7 +97,7 @@ function initializeWater() {
     
     function drawReflectionRipples() {
         ctx.save();
-        ctx.globalAlpha = 0.08; // Soft overlay
+        ctx.globalAlpha = 0.08;
         ctx.strokeStyle = "rgba(255, 255, 255, 0.15)";
         ctx.lineWidth = 1.2;
     
