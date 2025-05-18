@@ -1,28 +1,30 @@
 function initializeLoader() {
-    const overlay = document.getElementById("loadingOverlay");
-    const bar = document.getElementById("loadingBar");
-  
-    let progress = 0;
-  
-    const interval = setInterval(() => {
-      progress += 1.5;
-      bar.style.width = `${progress}%`;
-    
-      if (Math.floor(progress) % 10 === 0) {
-        bar.innerText = `${Math.floor(progress)}%`;
-      }
-    
-      if (progress >= 100) {
-        clearInterval(interval);
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            overlay.classList.add("lift");
-          }, 50);
-        });
-        overlay.addEventListener("animationend", () => {
-          overlay.remove();
-        });
-      }
-    }, 30);
+  const overlay = document.getElementById("loadingOverlay");
+  const bar = document.getElementById("loadingBar");
+  const percent = document.getElementById("loadingPercent");
+
+  const duration = 3000; // total duration in ms
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const t = Math.min(elapsed / duration, 1); 
+    const progress = Math.floor(t * 100);
+
+    bar.style.width = `${progress}%`;
+    percent.innerText = `${progress}%`;
+
+    if (t < 1) {
+      requestAnimationFrame(update);
+    } else {
+      setTimeout(() => {
+        overlay.classList.add("lift");
+      }, 50);
+      overlay.addEventListener("animationend", () => {
+        overlay.remove();
+      });
+    }
   }
-  
+
+  requestAnimationFrame(update);
+}

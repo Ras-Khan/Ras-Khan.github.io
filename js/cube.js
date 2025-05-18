@@ -21,7 +21,8 @@ function initializeCube() {
         });
     });
 
-    const cube = document.querySelector(".glass_container");
+    const cube = document.querySelector(".glass_container") ? document.querySelector(".glass_container") : document.querySelector(".glass_cube");
+    if (!cube) return; // Exit if the cube is not found
     const root = document.documentElement;
     let isExpanded = false;
     let rotationInterval = null; 

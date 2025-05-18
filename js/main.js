@@ -1,3 +1,21 @@
+// Fade-in from black if transitionOverlay exists
+window.addEventListener("DOMContentLoaded", () => {
+    const overlay = document.getElementById("transitionOverlayPlanet");
+    if (overlay) {
+        overlay.style.opacity = 1;
+        overlay.style.pointerEvents = "auto";
+        requestAnimationFrame(() => {
+            overlay.style.transition = "opacity 2s ease-in-out";
+            overlay.style.opacity = 0;
+            setTimeout(() => {
+                overlay.style.pointerEvents = "none";
+                overlay.remove();
+            }, 1000);
+        });
+    }
+});
+
+
 function loadScript(url, callback) {
     const script = document.createElement('script');
     script.src = url;
@@ -14,19 +32,18 @@ loadScript('js/loader.js', () => {
                     loadScript('js/cube.js', () => {
                         loadScript('js/floaters.js', () => {
                             loadScript('js/hoverEffect.js', () => {
-                                // Initialize everything
-                                initializeLoader();
-                                initialize3DLogo();
-                                initializeHexagon();
+                                // Initialize everything if they exist
+                                document.getElementById("loadingOverlay") ? initializeLoader() : null;
+                                document.getElementById("logo3D") ? initialize3DLogo() : null;
+                                document.querySelector('.hexagon') ? initializeHexagon() : null;
                                 initializeNightSky();
                                 initializeWater();
                                 initializeCube(); 
                                 initializeFloaters();
 
-                                // Attach highlights to stuff
-                                attachHighlightEffect(document.querySelector('.glass_container'));
-                                const rectangle = document.querySelector('#floatingRectangle .rect_front');
-                                if (rectangle) attachHighlightEffect(rectangle);
+                                // Attach highlights to stuff if they exist
+                                document.querySelector('.glass_container') ? attachHighlightEffect(document.querySelector('.glass_container')) : null;
+                                document.querySelector('#floatingRectangle .rect_front') ? attachHighlightEffect(document.querySelector('#floatingRectangle .rect_front')) : null;
                             });
                         });
                     });

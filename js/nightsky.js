@@ -183,10 +183,16 @@ function initializeNightSky() {
         mouseY = null;
     });
 
+    /* 
+    // Not a good solution yet, makes everything lagg when resizing too much
     window.addEventListener('resize', () => {
         resizeCanvas();
         drawNightSky();
     });
+    */
+    // Reloads page as temp solution 
+    window.addEventListener("resize", () => location.reload());
+
 
     resizeCanvas();
     drawNightSky();

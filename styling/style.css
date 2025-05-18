@@ -4,8 +4,8 @@
     --cube-height: 350px;
     --cube-depth: 20px;
 
-    --rect-width: 300px;  
-    --rect-height: 187.5px;  
+    --rect-width: 250px;  
+    --rect-height: 150px;  
     --rect-depth: 15px;   
 }
 
@@ -18,7 +18,6 @@ body {
     color: #FFF;
     display: flex;
     flex-direction: column;
-    height: 200vh;
     overflow: hidden; /* Prevents scrolling */
 }
 
@@ -35,30 +34,73 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    transform: translateY(0);
+    will-change: transform;
+    transform: translateY(0); 
 }
 
 #loadingOverlay.lift {
-    animation: liftOverlay 2.0s ease-in forwards;
+    animation: liftOverlay 1.0s ease-in forwards;
 }
 
+
+
 #loadingBarContainer {
-    position: absolute;
-    bottom: 60px;
+    position: relative;
+    bottom: 100px;
     width: 60%;
-    height: 6px;
+    height: 40px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
     overflow: hidden;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
 }
 
 #loadingBar {
     height: 100%;
     width: 0%;
-    background: linear-gradient(to right, #ffe28a, #ffffff);
-    transition: width 0.2s ease;
-    will-change: width; 
+    background: linear-gradient(
+        90deg,
+        #0a3d4f 0%,
+        #0f6c7e 40%,
+        #1ce1e7 70%,
+        #0a3d4f 100%
+    );
+    background-size: 200% auto;
+    animation: shimmer 3.5s linear infinite;
+    transition: width 0.25s ease;
+    will-change: width;
+    box-shadow: 0 0 12px rgba(28, 225, 231, 0.15);
 }
+
+
+
+#loadingPercent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: monospace;
+    font-size: 25px;
+    color: white; 
+    mix-blend-mode: difference;
+    pointer-events: none;
+    user-select: none;
+}
+
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% center;
+    }
+    100% {
+        background-position: -200% center;
+    }
+}
+
+
+
+
+
 
 #logo3DWrapper {
     width: 100%;
@@ -148,6 +190,496 @@ body {
     pointer-events: none;
 }
 
+
+
+
+
+
+
+
+
+/* Space */
+
+
+#debugHUD { /* Debugging */
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #00ffcc;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    z-index: 9999;
+    pointer-events: none;
+    white-space: pre;
+    display: none; /* Hide by default */
+}
+
+
+#universeWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    perspective: 2000px;
+    z-index: 0;
+}
+
+/* #universeWrapper::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/spaceBackground.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+} */
+
+
+#universeScene {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(0);
+}
+
+.star {
+    position: absolute;
+    border-radius: 50%;
+    will-change: opacity;
+    pointer-events: none;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 1; filter: brightness(1.3); }
+    50% { opacity: 0.7; filter: brightness(2); }
+  }
+  
+#spaceParallax {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.layer {
+    position: absolute;
+    width: 300%;
+    height: 300%;
+    background-repeat: repeat;
+    background-size: auto;
+    will-change: background-position;
+    pointer-events: none;
+}
+
+.stars_far {
+    background-image: url("../img/parallax/spaceBackgroundEdited.png");
+    background-repeat: repeat;
+    background-size: 100%;
+    background-position: center center;
+    opacity: 0.7;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    width: 300%;
+    height: 300%;
+  }
+  
+  
+
+.stars_mid {
+    background-image: url("../img/parallax/stars_mid.png");
+    opacity: 0.5;
+}
+
+.stars_near {
+    background-image: url("../img/parallax/stars_near.png");
+    opacity: 0.7;
+}
+
+/* Planet styling */
+
+.planet {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  will-change: transform;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+}
+
+.planet:hover {
+  transform: scale(1.1) translateZ(0);
+  cursor: pointer;
+}
+
+
+
+
+
+#planetOverlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 420px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.00);
+    backdrop-filter: blur(3px);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 2rem;
+    z-index: 999;
+    display: none;
+}
+
+#planetOverlay.visible {
+  display: flex;
+  flex-direction: column;
+  animation: slideInFromRight 0.4s ease forwards;
+}
+
+#planetOverlay.exiting {
+    display: flex;
+    flex-direction: column;
+    animation: slideOutToRight 0.4s ease forwards;
+}
+
+
+
+#planetOverlay h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: white; 
+}
+
+#planetOverlay p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+
+#enterPlanetBtn {
+  background: transparent;
+  border: 2px solid white; 
+  color: white;            
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.3s, color 0.3s;
+}
+
+#enterPlanetBtn:hover {
+  background: white;  
+  color: black;
+}
+
+#closePlanetOverlay {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  background: transparent;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, transform 0.2s;
+  z-index: 1000;
+}
+
+#closePlanetOverlay:hover {
+  background: white;
+  color: black;
+  transform: scale(1.05);
+}
+
+#planetOverlayImage {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    margin: 1rem 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+#transitionOverlaySpace {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 99999;
+    transition: opacity 1s ease-in-out;
+}
+
+#transitionOverlayPlanet {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 99999;
+  transition: opacity 1s ease-in-out;
+}
+
+
+
+
+
+
+
+
+#planetContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; 
+    pointer-events: none; 
+}
+
+
+.planet {
+    z-index: 399;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #44ccff, #000);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+    animation: slowTilt 40s ease-in-out infinite alternate;
+    animation: neutralPulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes neutralPulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 3px rgba(200, 200, 200, 0.05),
+      0 0 8px rgba(200, 200, 200, 0.03),
+      inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+      inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(230, 230, 230, 0.15),
+      0 0 20px rgba(210, 210, 210, 0.08),
+      inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+      inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+  }
+}
+
+.planetWrapper {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.planetWrapper:hover .planet {
+    animation: neutralPulseGlow 6s ease-in-out paused;
+    animation-delay: -6s; /* Forcing it to reset to 0 */
+    box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.35),
+        0 0 20px rgba(255, 255, 255, 0.2),
+        inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+}
+
+
+
+
+
+
+
+.planetHighlight {
+    position: absolute;
+    top: -55%;
+    left: 5%;
+    width: 80%;
+    height: 80%;
+    transform-origin: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(141, 141, 141, 0.58), transparent 70%);
+    mix-blend-mode: screen;
+    filter: blur(4px);
+    opacity: 0.8;
+    /*pointer-events: none;*/
+    animation: orbitHighlightCircular 10s linear infinite;
+}
+
+@keyframes orbitHighlightCircular {
+  from {
+    transform: rotate(0deg) translate(50%);
+  }
+  to {
+    transform: rotate(360deg) translate(50%);
+  }
+}
+
+.planetTexture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: 0 0;
+  opacity: 0.3;
+  animation: driftTexture 20s linear infinite;
+  /*pointer-events: none;*/
+}
+
+@keyframes driftTexture {
+  from { background-position: 0 0; }
+  to   { background-position: -100% 0; }
+}
+
+
+
+.planet_tooltip {
+    position: absolute;
+    width: 300px;
+    height: 225px;
+    display: none;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    font-family: "Segoe UI", sans-serif;
+    color: #ccc;
+    z-index: 999;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    padding: 0;
+    animation: tooltipFade 0.3s ease-out;
+}
+
+.tooltip_image_container {
+  position: relative;
+  width: 100%;
+  height: 125px;
+  overflow: hidden;
+}
+
+.tooltip_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.9);
+}
+
+.tooltip_header_overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(255,255,255,0.2);
+}
+
+.tooltip_separator {
+  width: 90%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1px auto;
+}
+
+.tooltip_detail {
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 20px;
+}
+
+.tooltip_label {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: #888;
+}
+
+.tooltip_value {
+  font-weight: 600;
+  color: #ddd;
+}
+
+@keyframes tooltipFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+
+
+
+
+
+
+
 header {
     position: sticky;
     top: 0;
@@ -214,7 +746,7 @@ nav .nav_links li a {
     top: 0;
     left: 0;
     width: 100%;
-    height: 50vh;
+    height: 60vh;
     z-index: 1;
 }
 
@@ -223,15 +755,15 @@ nav .nav_links li a {
     top: 0;
     left: 0;
     width: 100%;
-    height: 50vh;
+    height: 60vh;
     z-index: 2;
     background: transparent;
 }
 
 #home {
     position: relative;
-    height: 40vh;
-    top: 10vh;
+    height: 30vh;
+    top: 20vh;
     width: 100%;
     overflow: hidden;
     background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), transparent);

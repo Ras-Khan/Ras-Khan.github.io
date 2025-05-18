@@ -31,7 +31,7 @@ function attachHighlightEffect(targetElement) {
     
         const heightScale = Math.min(1, 220 / rect.height);
         const centerX = rect.left + rect.width / 2 + scrollX + shiftX;
-        const beamBottom = rect.top + scrollY + rect.height * 0.64 * heightScale + (250 - rect.height * 0.25);
+        const beamBottom = rect.top + scrollY + rect.height * 0.64 * heightScale + (150 - rect.height * 0.25);
     
         beam.style.left = `${centerX}px`;
         beam.style.top = `0px`;

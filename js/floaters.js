@@ -39,24 +39,28 @@ function initializeFloaters() {
 
     function animateFloating() {
         if (!moving) return;
-
+    
         angle += 0.01;
         positionX -= 0.008;
         positionY = Math.sin(angle) * 1.5 + Math.cos(angle * 0.5) * 1;
-
+    
+        let tiltX = 70 + Math.sin(angle * 0.6) * 5; // 65–75° rotation
         let tiltY = Math.sin(angle * 0.8) * 1.5;
         rotationZ = Math.sin(angle * 0.5) * 7;
-
+    
         rectangle.style.left = `${positionX}%`;
         rectangle.style.bottom = `${10 + positionY}%`;
-        rectangle.style.transform = `rotateX(45deg) rotateY(${tiltY}deg) rotateZ(${rotationZ}deg)`;
-
+        rectangle.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg) rotateZ(${rotationZ}deg)`;
+    
         if (positionX <= -10) {
             positionX = 100;
         }
-
+    
         animationFrame = requestAnimationFrame(animateFloating);
     }
+    
+    
+    
 
 
     function openInterface() {
