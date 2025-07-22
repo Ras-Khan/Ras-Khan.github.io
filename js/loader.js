@@ -3,7 +3,7 @@ function initializeLoader() {
   const bar = document.getElementById("loadingBar");
   const percent = document.getElementById("loadingPercent");
 
-  const duration = 3000; // total duration in ms
+  const duration = 750; // total duration in ms
   const start = performance.now();
 
   function update(now) {

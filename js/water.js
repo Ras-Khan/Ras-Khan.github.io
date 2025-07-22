@@ -1,4 +1,3 @@
-
 function initializeWater() {
     const canvas = document.getElementById("waterCanvas");
     const ctx = canvas.getContext("2d");
@@ -18,7 +17,6 @@ function initializeWater() {
             Math.sin(x * 0.5 + y * 0.6)
         ) * 0.33;
     }
-    
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -57,7 +55,6 @@ function initializeWater() {
                 stripHeight
             );
         }
-
         ctx.restore();
     }
 
@@ -91,7 +88,6 @@ function initializeWater() {
                 ctx.fillRect(x, y, waveResolution, waveResolution);
             }
         }
-    
         ctx.restore();
     }
     
@@ -117,21 +113,15 @@ function initializeWater() {
         ctx.restore();
     }
     
-
-
     function animate() {
         offsetX += inc;
         offsetY -= inc;
-
         drawWaterSurface();
         drawReflection();
-
         drawWaves();
         drawReflectionRipples();
 
-
         requestAnimationFrame(animate);
     }
-
     animate();
 }

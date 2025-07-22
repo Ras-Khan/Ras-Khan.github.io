@@ -1,0 +1,137 @@
+/* Planet styling */
+.planetWrapper {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.planetWrapper.focusedPlanet .planet,
+.planetWrapper:hover .planet {
+    animation: neutral_pulse_glow 6s ease-in-out paused;
+    animation-delay: -6s; /* Forcing it to reset to 0 */
+    box-shadow:
+        0 0 30px rgba(0, 255, 255, 0.6),
+        0 0 50px rgba(0, 255, 255, 0.4),
+        inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+}
+
+.planet {
+    z-index: 399;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #44ccff, #000);
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+        inset -10px -10px 20px rgba(0, 0, 0, 0.4),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.08);
+    animation: slowTilt 40s ease-in-out infinite alternate, neutral_pulse_glow 2s ease-in-out infinite;
+}
+
+.planetHighlight {
+    position: absolute;
+    top: -55%;
+    left: 5%;
+    width: 80%;
+    height: 80%;
+    transform-origin: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.95), transparent 60%);
+    mix-blend-mode: screen;
+    filter: blur(8px) brightness(1.5);
+    opacity: 1;
+    animation: orbit_highlight_circular 10s linear infinite;
+}
+
+.planetTexture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  background-position: 0 0;
+  opacity: 0.3;
+  animation: drift_texture 20s linear infinite;
+}
+
+.planet_tooltip {
+    position: absolute;
+    width: 300px;
+    height: 225px;
+    display: none;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    font-family: "Segoe UI", sans-serif;
+    color: #ccc;
+    z-index: 999;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    padding: 0;
+    animation: tooltip_fade 0.3s ease-out;
+}
+
+.tooltip_image_container {
+  position: relative;
+  width: 100%;
+  height: 125px;
+  overflow: hidden;
+}
+
+.tooltip_image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.9);
+}
+
+.tooltip_header_overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 5px rgba(255,255,255,0.2);
+}
+
+.tooltip_separator {
+  width: 90%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 1px auto;
+}
+
+.tooltip_detail {
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 20px;
+}
+
+.tooltip_label {
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.4px;
+  color: #888;
+}
+
+.tooltip_value {
+  font-weight: 600;
+  color: #ddd;
+}

@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Universe</title>
-    <link rel="stylesheet" href="styling/style.css">
+  <script src="js/load_styles.js"></script>
 </head>
 <body>
     
   <div id="loadingOverlay">
-
     <div id="logo3DWrapper">
         <div id="logo3D">
             <div class="logo_half left"></div>
@@ -17,13 +17,11 @@
             <div class="logo_half mirror_right"></div>
         </div>
     </div>
-
     <div id="loadingBarContainer">
         <div id="loadingBar"></div>
         <div id="loadingPercent">0%</div>
     </div>
   </div>
-
 
   <div id="debugHUD"></div>
 
@@ -33,10 +31,6 @@
     <div class="layer stars_near"></div>
   </div>
   
-  
-
-
-
   <div id="universeWrapper">
     <div id="planetTooltip" class="planet_tooltip">
       <div class="tooltip_image_container">
@@ -49,11 +43,13 @@
       <div class="tooltip_detail"><span class="tooltip_label">TIMELINE</span><span id="tooltipTimeline" class="tooltip_value">--</span></div>
     </div>
   
-
-
     <div id="planetContainer"></div>
     <canvas id="universeSky"></canvas>
     <div id="planetOverlayContainer"></div>
+
+    <div id="planetNavControls">
+        <button id="nav_planet_next" aria-label="Next Planet">NEXT</button>
+    </div>
   </div>
 
   <!-- UI overlay for planet info -->
@@ -65,16 +61,9 @@
     <button id="enterPlanetBtn">Enter</button>
   </div>
 
-
   <div id="transitionOverlaySpace"></div>
-
-
-
-
-
     
-
-
+  <script src="js/main.js"></script>
   <script src="js/main_universe.js"></script>
 </body>
 </html>

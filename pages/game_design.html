@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Design - Astro Blast</title>
+    <script src="../js/load_styles.js"></script>
+</head>
+<body class="game_design_page">
+    <div id="handheld_console">
+        <div id="left_controller">
+            <div class="analog_stick">
+                <div class="stick_grip"></div>
+            </div>
+            <div class="d_pad">
+                <div class="d_pad_btn up"></div>
+                <div class="d_pad_btn down"></div>
+                <div class="d_pad_btn left"></div>
+                <div class="d_pad_btn right"></div>
+            </div>
+            <a href="../index.html" class="exit_button_game" aria-label="Exit to Home">EXIT</a>
+        </div>
+        <div id="screen_bezel">
+            <div id="console_screen">
+                <header id="screen_header">
+                    <h1>ASTRO BLAST</h1>
+                </header>
+                <main id="screen_content_area">
+                    <!-- Main Menu View -->
+                    <div id="main_menu_view" class="view active">
+                        <ul id="main_menu">
+                            <li><button class="menu_button" data-view="about_view">[ About ]</button></li>
+                            <li><button class="menu_button" data-view="features_view">[ Features ]</button></li>
+                            <li><button class="menu_button" data-view="level_design_view">[ Level Design ]</button></li>
+                            <li><button class="menu_button" data-view="demo_view">[ Demo ]</button></li>
+                        </ul>
+                    </div>
+
+                    <!-- About View -->
+                    <div id="about_view" class="view">
+                        <div class="content_view">
+                            <h2>ABOUT THE PROJECT</h2>
+                            <p>For a school project, I developed 'Astro Blast,' a 2D retro platformer. This game was created from start to finish within an 8-week timeframe. Players navigate through levels, fighting enemies using a sword and a gun. A key feature is the choice of a special power at the start of each level—'Super Speed' or 'Time Freeze'—which provides a unique way to play. The objective is to defeat the level's boss and reach the final checkpoint to win.</p>
+                            
+                            <div class="back_button_container">
+                                <button class="pixel_button back_button">BACK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features View -->
+                    <div id="features_view" class="view">
+                        <div class="content_view">
+                            <h2 class="content_view_heading">PLAYER</h2>
+                            <p>The player character has several actions, including a double jump for extra mobility. All character animations are rendered from spritesheets. The player has a hp system of 100HP and will take damage when touching an enemy.</p>
+                            <div class="features_grid">
+                                <div class="feature_card">
+                                    <h3>RUNNING</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_run" class="sprite_animation"></div>
+                                    </div>
+                                    <p>The running animation for basic movement. </p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>JUMPING</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_jump" class="sprite_animation"></div>
+                                    </div>
+                                    <p>The animation for a mid-air double jump.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>MELEE</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_melee" class="sprite_animation"></div>
+                                    </div>
+                                    <p>Sword attack for melee combat.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>SHOOTING</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_shoot" class="sprite_animation"></div>
+                                    </div>
+                                    <p>A standing and running shooting animation.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>DYING</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_death" class="sprite_animation"></div>
+                                    </div>
+                                    <p>The character's death animation.</p>
+                                </div>
+                            </div>
+
+                            <h2 class="content_view_heading">ABILITIES</h2>
+                            <p>At the start of each level, players can choose between three unique powers:</p>
+                            <div class="features_grid">
+                                <div class="feature_card">
+                                    <h3>SUPER SPEED</h3>
+                                    <div class="feature_image_container">
+                                        <img src="../img/game_design_img/super_speed_image.png" alt="Super Speed ability icon">
+                                    </div>
+                                    <p>Dash in super speed with extra velocity.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>TIME FREEZE</h3>
+                                    <div class="feature_image_container">
+                                        <img src="../img/game_design_img/time_freeze_art.png" alt="Time Freeze ability icon">
+                                    </div>
+                                    <p>Slow down time for enemies temporarily. </p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>SUPER SAIYAN</h3>
+                                    <div class="feature_image_container">
+
+                                    </div>
+                                    <p>A power boost to your attacks. This didn't make it into the game on time.</p>
+                                </div>
+                            </div>
+                            <p> All these powers were intended for a class based system which unfortunately didn't make it in. The time-freeze power was inspired from Dante's Quicksilver in the Devil May Cry series. </p>
+                            
+                            <h2 class="content_view_heading">ENEMIES</h2>
+                            <p>The enemies are inspired by classic platformers like Super Mario. Just touching one will cause the player to take damage. Each one has a unique movement pattern that you'll need to learn to avoid them. They can be defeated with either melee attacks or by shooting them.</p>
+                            <div class="features_grid">
+                                <div class="feature_card">
+                                    <h3>EAGLE</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_enemy_eagle" class="sprite_animation"></div>
+                                    </div>
+                                    <p>A flying sentinel that dives to attack.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>SLIME</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_enemy_slime" class="sprite_animation"></div>
+                                    </div>
+                                    <p>A basic ground unit that slowly moves towards the player.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>CYBORG</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_enemy_cyborg" class="sprite_animation"></div>
+                                    </div>
+                                    <p>A fast-moving cyborg that charges at the player.</p>
+                                </div>
+                            </div>
+
+                            <h2 class="content_view_heading">BOSS</h2>
+                            <p>At the end of each level, players will face a final boss. This enemy has increased health and uses two attack patterns: a direct melee attack if the player is nearby and a sudden teleport to get close to the player. Defeating this boss will complete the level.</p>
+                            <div class="features_grid">
+                                <div class="feature_card">
+                                    <h3>MELEE ATTACK</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_enemy_boss_melee" class="sprite_animation"></div>
+                                    </div>
+                                    <p>The boss runs towards the player and performs a melee swipe attack.</p>
+                                </div>
+                                <div class="feature_card">
+                                    <h3>TELEPORT</h3>
+                                    <div class="feature_image_container">
+                                        <div id="sprite_enemy_boss_teleport" class="sprite_animation"></div>
+                                    </div>
+                                    <p>The boss can also teleport next to the player to perform a melee attack.</p>
+                                </div>
+                            </div>
+                            
+                             <div class="back_button_container">
+                                <button class="pixel_button back_button">BACK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Level Design View -->
+                    <div id="level_design_view" class="view">
+                        <div class="content_view">
+                            <div class="level_design_tabs">
+                                <button class="tab_button_gd active" data-tab="tilesets_tab_content">TILESETS</button>
+                                <button class="tab_button_gd" data-tab="assets_tab_content">ASSETS</button>
+                                <button class="tab_button_gd" data-tab="levels_tab_content">LEVELS</button>
+                            </div>
+
+                            <div id="tilesets_tab_content" class="tab_content_gd active">
+                                <div class="tileset_container">
+                                    <h2 class="content_view_heading">STANDARD TILESET</h2>
+                                    <p>A basic tileset for platforms, walls and backgrounds. I personally found this tileset too playful for what I was trying to create. Which is why I recoloured this as shown below. </p>
+                                    <img src="../img/game_design_img/terrain_tiles.png" alt="Standard Tileset">
+                                </div>
+                                <div class="tileset_container">
+                                    <h2 class="content_view_heading">NIGHT TILESET</h2>
+                                    <p>A recoloured, darker version of the above tileset. This creates in my opinion a more serious and dangerous atmosphere.</p>
+                                    <img src="../img/game_design_img/terrain_tiles_recoloured.png" alt="Night Tileset">
+                                </div>
+                            </div>
+                            
+                            <div id="assets_tab_content" class="tab_content_gd">
+                                <div class="asset_showcase_container">
+                                    <h2 class="content_view_heading">INTERACTIVE ASSETS</h2>
+                                    <p>To add more dangers in the level than just enemies, I also wanted some environmental hazards as shown here. </p>
+                                    <div class="features_grid">
+                                        <div class="feature_card">
+                                            <h3>FLOOR SPIKES</h3>
+                                            <div class="feature_image_container">
+                                                <img class="asset_image" src="../img/game_design_img/floor_spikes.png" alt="Floor spikes asset">
+                                            </div>
+                                            <p>Floor spikes that damages the player. They either need to be jumped over or ignored</p>
+                                        </div>
+                                        <div class="feature_card">
+                                            <h3>SPIKED BALL</h3>
+                                            <div class="feature_image_container">
+                                                 <img class="asset_image" src="../img/game_design_img/spiked_ball.png" alt="Spiked ball asset">
+                                            </div>
+                                            <p>A spiked ball that moves around in a set pattern that kills the player when touched.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="parallax_showcase_container">
+                                    <h2 class="content_view_heading">PARALLAX BACKGROUND</h2>
+                                    <p>As for the background of my game, I found a static background too bland. This is when I searched and found a technique called parallax scrolling. To implement this, I divided a static background image into several parts and made them move at different speeds. The furthest layer moves the slowest, while the closest layer moves the fastest as demonstrated below: </p>
+                                    <div class="features_grid">
+                                        <div class="feature_card">
+                                            <h3>Mountain 1</h3>
+                                            <div class="feature_image_container parallax_asset">
+                                                <img src="../img/game_design_img/parallax/rocks_1.png" alt="Parallax mountains">
+                                            </div>
+                                        </div>
+                                        <div class="feature_card">
+                                            <h3>Mountain 2</h3>
+                                            <div class="feature_image_container parallax_asset">
+                                                <img src="../img/game_design_img/parallax/rocks_2.png" alt="Parallax far clouds">
+                                            </div>
+                                        </div>
+                                         <div class="feature_card">
+                                            <h3>Clouds 1</h3>
+                                            <div class="feature_image_container parallax_asset">
+                                                <img src="../img/game_design_img/parallax/clouds_1.png" alt="Parallax distant clouds">
+                                            </div>
+                                        </div>
+                                        <div class="feature_card">
+                                            <h3>Clouds 2</h3>
+                                            <div class="feature_image_container parallax_asset">
+                                                <img src="../img/game_design_img/parallax/clouds_2.png" alt="Parallax mid-ground clouds">
+                                            </div>
+                                        </div>
+                                    </div>
+                            
+                                    <div id="parallax_preview_screen">
+                                        <div class="parallax_layer" id="p_layer_1"></div>
+                                        <div class="parallax_layer" id="p_layer_2"></div>
+                                        <div class="parallax_layer" id="p_layer_3"></div>
+                                        <div class="parallax_layer" id="p_layer_4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div id="levels_tab_content" class="tab_content_gd">
+                                <div id="level_preview_container">
+                                    <img id="level_preview_image" src="" alt="Level Preview">
+                                    <p id="level_preview_caption"></p>
+                                </div>
+                                <div id="level_thumbnails">
+                                    <div class="level_thumbnail active" data-level-index="0">
+                                        <img src="../img/game_design_img/level_1.png" alt="Level 1 Thumbnail">
+                                    </div>
+                                    <div class="level_thumbnail" data-level-index="1">
+                                        <img src="../img/game_design_img/level_2.png" alt="Level 2 Thumbnail">
+                                    </div>
+                                    <div class="level_thumbnail" data-level-index="2">
+                                        <img src="../img/game_design_img/level_3.png" alt="Level 3 Thumbnail">
+                                    </div>
+                                </div>
+                            </div>
+                    
+                            <div class="back_button_container">
+                                <button class="pixel_button back_button">BACK</button>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Demo View -->
+                    <div id="demo_view" class="view">
+                        <div class="content_view">
+                            <h2>GAME DEMO</h2>
+                            <p>A playable demo is not yet available.</p>
+                             <div class="back_button_container">
+                                <button class="pixel_button back_button">BACK</button>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <div id="right_controller">
+            <div class="utility_button plus"></div>
+            <div class="action_buttons">
+                <div class="button_face" id="button_y">Y</div>
+                <div class="button_face" id="button_x">X</div>
+                <div class="button_face" id="button_b">B</div>
+                <div class="button_face" id="button_a">A</div>
+            </div>
+            <div class="analog_stick">
+                <div class="stick_grip"></div>
+            </div>
+            <div class="home_button"></div>
+        </div>
+    </div>
+    
+    <script src="../js/main.js"></script>
+</body>
+</html>

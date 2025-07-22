@@ -1,5 +1,20 @@
-function initialize3DLogo() {
-    const logo = document.getElementById("logo3D");
+function initialize3DLogo(logoElementOrId = "logo3D") {
+    let logo;
+    if (typeof logoElementOrId === 'string') {
+        logo = document.getElementById(logoElementOrId);
+    } else if (logoElementOrId instanceof HTMLElement) {
+        logo = logoElementOrId;
+    }
+
+    if (!logo) {
+        console.error("3D Logo element not found:", logoElementOrId);
+        return;
+    }
+
+    // Clear existing extrude faces to prevent duplication
+    const existingFaces = logo.querySelectorAll('.logo_extrude_face');
+    existingFaces.forEach(face => face.remove());
+
     const depth = 30;
 
     const clipPathPoints = [

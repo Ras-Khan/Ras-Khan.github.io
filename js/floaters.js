@@ -20,9 +20,9 @@ function initializeFloaters() {
         <div id="floatingInterfaceContent">
             <button id="closeInterface">✕</button>
             <h2>Contact</h2>
-            <a href="https://www.github.com/Ras-Khan" target="_blank"> <p> <img src="img/github.png"> Github.com/Ras-Khan</p> </a>
-            <a href="mailto:r.sahangoekhan@gmail.com"> <p> <img src="img/mail.png"> R.Sahangoekhan@gmail.com</p> </a>
-            <a href="https://www.linkedin.com/in/Rashad-Sahang" target="_blank"> <p> <img src="img/linkedIn.png"> www.linkedin.com/in/Rashad-Sahang</p> </a>
+            <a href="#" target="_blank"> <p> <img src="img/github.png"> Github.com/</p> </a>
+            <a href="#"> <p> <img src="img/mail.png"> test@gmail.com</p> </a>
+            <a href="#" target="_blank"> <p> <img src="img/linkedIn.png"> www.linkedin.com/</p> </a>
         </div>
         <div id="floatingInterfaceBottomBar"></div>
     `;    
@@ -55,14 +55,9 @@ function initializeFloaters() {
         if (positionX <= -10) {
             positionX = 100;
         }
-    
         animationFrame = requestAnimationFrame(animateFloating);
     }
     
-    
-    
-
-
     function openInterface() {
         if (interfaceOpen) return;
         interfaceOpen = true;
@@ -154,6 +149,5 @@ function initializeFloaters() {
         }
     });
     
-
     animateFloating();
 }

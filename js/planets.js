@@ -1,3 +1,4 @@
+// TODO: Remove without breaking anything
 function initializePlanets() {
   // const planetData = [
   //   {

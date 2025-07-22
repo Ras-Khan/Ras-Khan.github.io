@@ -1,47 +1,42 @@
 function initializeCube() {
-    document.addEventListener('DOMContentLoaded', () => {
-        const cubeFaceBack = document.querySelector('.glass_face.back');
+    const cubeEl = document.querySelector(".glass_container") || document.querySelector(".glass_cube");
+    if (!cubeEl) return null;
 
-        cubeFaceBack.addEventListener('wheel', (event) => {
-            const canScrollInside = cubeFaceBack.scrollHeight > cubeFaceBack.clientHeight;
-
-            if (canScrollInside) {
-                const atTop = cubeFaceBack.scrollTop === 0;
-                const atBottom =
-                    cubeFaceBack.scrollTop + cubeFaceBack.clientHeight >= cubeFaceBack.scrollHeight;
-
-                if ((event.deltaY < 0 && atTop) || (event.deltaY > 0 && atBottom)) {
-                    // Only scroll the page if the cube can't scroll anymore
-                    return;
-                }
-                // Prevent page scrolling and scroll only inside the cube
-                event.preventDefault();
-                cubeFaceBack.scrollTop += event.deltaY;
-            }
-        });
-    });
+    // Check if the cube is inside the cockpit's component viewer
+    const isContainedInCockpit = !!cubeEl.closest('.component_view');
 
     const cube = document.querySelector(".glass_container") ? document.querySelector(".glass_container") : document.querySelector(".glass_cube");
-    if (!cube) return; // Exit if the cube is not found
+    if (!cube) return null;
     const root = document.documentElement;
     let isExpanded = false;
-    let rotationInterval = null; 
+    let rotationInterval = null;
+    let projectSlideshowInterval = null;
+    let currentShowroomProjectIndex = 0;
 
-    const leftButton = document.querySelector(".nav_button.left");
-    const rightButton = document.querySelector(".nav_button.right");
+    const leftButton = document.querySelector(".nav_button_control.left");
+    const rightButton = document.querySelector(".nav_button_control.right");
 
     let rotationX = 0;
     let rotationY = 0;
-    let rotationDirection = 1; // 1 for clockwise, -1 for counter-clockwise
-    const minRotation = -15;
-    const maxRotation = 15;
     const cubeElement = document.querySelector('.glass_cube');
     const closeButton = document.querySelector(".close_button");
 
+    const frontFace = document.querySelector(".glass_face.front");
+    const backFace = document.querySelector(".glass_face.back");
+
     function startRotation() {
-        cubeElement.style.transition = "top 1.6s"; // This fixes the rotation speed at the start for some reason
         if (!rotationInterval) {
-            rotationInterval = setInterval(rotateCube, 50);
+            rotationInterval = setInterval(rotateCube, 33);
+        }
+
+        if (isContainedInCockpit) {
+            if (projectSlideshowInterval) clearInterval(projectSlideshowInterval);
+            
+            // Clear previous content and set initial slide
+            frontFace.innerHTML = '';
+            showroomNextProject(); // Place first slide immediately
+            
+            projectSlideshowInterval = setInterval(showroomNextProject, 2800);
         }
     }
 
@@ -50,26 +45,40 @@ function initializeCube() {
             clearInterval(rotationInterval);
             rotationInterval = null;
         }
+        if (projectSlideshowInterval) {
+            clearInterval(projectSlideshowInterval);
+            projectSlideshowInterval = null;
+        }
     }
-    
+
     function stopRotation() {
         clearInterval(rotationInterval);
+        if (projectSlideshowInterval) clearInterval(projectSlideshowInterval);
         rotationY = 0;
         rotationX = 0;
         rotationInterval = null;
+        projectSlideshowInterval = null;
     }
 
     function rotateCube() {
         if (!cubeElement) return;
 
-        rotationY += 0.5 * rotationDirection; 
-        if (rotationY >= maxRotation || rotationY <= minRotation) { rotationDirection *= -1; }
-        
-        cubeElement.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        if (isContainedInCockpit) {
+            rotationY += 4.0; // Faster speed if its in the 'showroom'
+            cubeElement.style.transform = `rotateX(0deg) rotateY(${rotationY}deg) scale(0.8)`;
+        } else {
+            rotationY += 1.0; // Faster and constant rotation
+            cubeElement.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+        }
     }
 
 
     cube.addEventListener("click", () => {
+        // Remove the expansion functionality if its in the showroom
+        if (isContainedInCockpit) {
+            return;
+        }
+
         if (!isExpanded) {
             stopRotation();
             cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
@@ -85,29 +94,32 @@ function initializeCube() {
 
             setTimeout(() => {
                 cube.style.zIndex = "9";
-                cube.style.top = "85%"; 
+                cube.style.top = "85%";
             }, 600);
 
             setTimeout(() => {
-                cube.style.top = "60%"; 
+                cube.style.top = "60%";
             }, 800);
 
             setTimeout(() => {
                 cube.style.transition = "top 0.5s cubic-bezier(0.25, 1.5, 0.5, 1)";
-                cube.style.top = "65%"; 
+                cube.style.top = "65%";
             }, 1500);
 
             setTimeout(() => {
                 root.style.setProperty("--cube-width", "1400px");
                 root.style.setProperty("--cube-height", "700px");
                 closeButton.style.display = "block";
-                leftButton.style.display = "block"; 
-                rightButton.style.display = "block"; 
+                leftButton.style.display = "block";
+                rightButton.style.display = "block";
+                
+                // So it can be clicked and scrolled
+                frontFace.style.pointerEvents = 'all';
+                frontFace.style.overflowY = 'auto';
             }, 900);
 
             currentProjectIndex = 0;
             updateProjectContent(currentProjectIndex);
-            backFace.appendChild(closeButton);
         }
         isExpanded = true;
     });
@@ -117,11 +129,11 @@ function initializeCube() {
         e.stopPropagation(); // No clicking while its being closed
 
         cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
-        cube.style.top = "75%"; 
+        cube.style.top = "75%";
 
         setTimeout(() => {
             cubeElement.style.transition = "top 1.6s cubic-bezier(0.25, 1.5, 0.5, 1)";
-            cube.style.top = "60%"; 
+            cube.style.top = "60%";
             root.style.setProperty("--cube-width", "900px");
             root.style.setProperty("--cube-height", "450px");
         }, 100);
@@ -133,7 +145,7 @@ function initializeCube() {
 
         setTimeout(() => {
             cubeElement.style.transition = "top 0.8s cubic-bezier(0.25, 1.2, 0.5, 1)";
-            cube.style.top = "105%"; 
+            cube.style.top = "105%";
         }, 700);
 
         setTimeout(() => {
@@ -147,17 +159,14 @@ function initializeCube() {
 
         startRotation();
 
-        backFace.innerHTML = originalContent; 
-        backFace.className = originalClasses;
-        if (originalStyle) {
-            backFace.setAttribute("style", originalStyle);
-        } else {
-            backFace.removeAttribute("style");
-        }
+        // Clear project content from the front
+        frontFace.innerHTML = '';
+        frontFace.style.pointerEvents = 'none';
+        frontFace.style.overflowY = 'hidden';
 
-        backFace.appendChild(closeButton);
+        // Hide buttons and reset cursor
         closeButton.style.display = "none";
-        leftButton.style.display = "none"; 
+        leftButton.style.display = "none";
         rightButton.style.display = "none";
         cube.style.cursor = "pointer";
     });
@@ -165,24 +174,21 @@ function initializeCube() {
 
     leftButton.addEventListener("click", () => {
         currentProjectIndex = (currentProjectIndex - 1 + projects.length) % projects.length;
-        nextProject("right"); 
+        nextProject("right");
     });
 
     rightButton.addEventListener("click", () => {
         currentProjectIndex = (currentProjectIndex + 1) % projects.length;
-        nextProject("left"); 
+        nextProject("left");
     });
 
     cube.addEventListener("mouseenter", () => {
-        if (!isExpanded) pauseRotation();
+        if (!isExpanded && !isContainedInCockpit) pauseRotation();
     });
 
     cube.addEventListener("mouseleave", () => {
-        if (!isExpanded) startRotation();
+        if (!isExpanded && !isContainedInCockpit) startRotation();
     });
-
-
-
 
     // Project data, still W.I.P.
     const projects = [
@@ -196,113 +202,109 @@ function initializeCube() {
             "title": "Example project 2",
             "description": "This is example project 2.",
             "image": "img/placeholder_1920x1080.png",
-            "link": "https://example.com/ecoquest"
+            "link": "https://example.com/project2"
         },
         {
             "title": "Example project 3",
             "description": "This is example project 3.",
             "image": "img/test.png",
-            "link": "https://example.com/circuitcrafter"
+            "link": "https://example.com/project3"
         }
     ];
 
     let currentProjectIndex = 0;
-    const backFace = document.querySelector(".glass_face.back");
-    const originalContent = backFace.innerHTML; 
-    const originalClasses = backFace.className; 
-    const originalStyle = backFace.getAttribute("style"); 
-
 
     function updateProjectContent(index) {
         const project = projects[index];
-        backFace.innerHTML = `
-            <div class="project_content project_type_1">
+        const imagePath = project.image;
+        if (!frontFace) return;
+        
+        frontFace.innerHTML = `
+            <div class="project_content">
+                <div class="project_type_1">
+                    <h1>${project.title}</h1>
+                    <img src="${imagePath}" alt="${project.title}">
+                    <p>${project.description}</p>
+                    <a href="${project.link}" target="_blank">View More</a>
+                </div>
+            </div>
+        `;
+    }
+
+    function showroomNextProject() {
+        if (!frontFace) return;
+        const projectsToRemove = frontFace.querySelectorAll(".project_content");
+    
+        // Add the new project in
+        currentShowroomProjectIndex = (currentShowroomProjectIndex + 1) % projects.length;
+        const project = projects[currentShowroomProjectIndex];
+        const imagePath = `../${project.image}`;
+    
+        const newProject = document.createElement("div");
+        newProject.classList.add("project_content");
+        newProject.innerHTML = `
+            <div class="project_type_1">
+                <h1>${project.title}</h1>
+                <img src="${imagePath}" alt="${project.title}">
+                <p>${project.description}</p>
+                <a href="${project.link}" target="_blank">View More</a>
+            </div>
+        `;
+        newProject.style.animation = `slide_in_left 0.5s forwards`;
+        frontFace.appendChild(newProject);
+    
+        // Remove old projects, don't want them to stack on top
+        if (projectsToRemove.length > 0) {
+            projectsToRemove.forEach(p => {
+                p.style.animation = `slide_out_left 0.5s forwards`;
+                p.addEventListener('animationend', () => p.remove(), { once: true });
+            });
+        }
+    }
+
+
+    function nextProject(dir) {
+        const projectsToRemove = frontFace.querySelectorAll(".project_content");
+        if (projectsToRemove.length === 0) {
+            // Failsafe?
+            updateProjectContent(currentProjectIndex);
+            return;
+        }
+
+        const direction = dir;
+        leftButton.disabled = true;
+        rightButton.disabled = true;
+    
+        projectsToRemove.forEach(p => {
+            p.style.animation = `slide_out_${direction} 1.00s forwards`;
+            p.addEventListener('animationend', () => p.remove(), { once: true });
+        });
+    
+        // Add a new project in
+        const project = projects[currentProjectIndex];
+        const newProject = document.createElement("div");
+        newProject.classList.add("project_content");
+        newProject.innerHTML = `
+            <div class="project_type_1">
                 <h1>${project.title}</h1>
                 <img src="${project.image}" alt="${project.title}">
                 <p>${project.description}</p>
                 <a href="${project.link}" target="_blank">View More</a>
             </div>
         `;
-    }
-
-    function nextProject(dir) {
-        const currentProject = backFace.querySelector(".project_content");
-        const direction = dir; 
-
-        // Disable Buttons Temporarily
-        leftButton.disabled = true;
-        rightButton.disabled = true;
-
-        currentProject.style.animation = `slide_out_${direction} 1.00s forwards`;
-
-        // Prepare the new project and slide it in
-        const newProject = document.createElement("div");
-        newProject.classList.add("project_content", "project_type_1");
-        const project = projects[currentProjectIndex]; 
-
-        newProject.innerHTML = `
-            <h1>${project.title}</h1>
-            <img src="${project.image}" alt="${project.title}">
-            <p>${project.description}</p>
-            <a href="${project.link}" target="_blank">View More</a>
-        `;
-
         newProject.style.animation = `slide_in_${direction} 1.00s forwards`;
-
-        backFace.appendChild(newProject);
-
-        setTimeout(() => {
-            backFace.removeChild(currentProject);
-            leftButton.disabled = false; 
+        
+        newProject.firstElementChild.addEventListener('animationend', () => {
+            leftButton.disabled = false;
             rightButton.disabled = false;
-        }, 500);
+        }, { once: true });
+
+        frontFace.appendChild(newProject);
     }
 
-    startRotation();
+    // Returning a controller so I can control it from other files
+    return {
+        start: startRotation,
+        stop: pauseRotation
+    };
 }
-
-
-
-
-/* // To move the cube with the mouse
-function initializeCube() {
-    const cube = document.querySelector('.glass_cube');
-
-    // Start the rotation
-    //setInterval(rotateCube, 20);
-
-    // let isDragging = false;
-    // let previousMouseX = 0;
-    // let previousMouseY = 0;
-
-    // Enable drag-to-rotate
-    // const onMouseMove = (event) => {
-    //     if (!isDragging) return;
-
-    //     const deltaX = event.clientX - previousMouseX;
-    //     const deltaY = event.clientY - previousMouseY;
-
-    //     rotationX -= deltaY * 0.5;
-    //     rotationY += deltaX * 0.5;
-
-    //     cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
-
-    //     previousMouseX = event.clientX;
-    //     previousMouseY = event.clientY;
-    // };
-
-    // const onMouseDown = (event) => {
-    //     isDragging = true;
-    //     previousMouseX = event.clientX;
-    //     previousMouseY = event.clientY;
-    // };
-
-    // const onMouseUp = () => {
-    //     isDragging = false;
-    // };
-
-    // cube.addEventListener('mousedown', onMouseDown);
-    // window.addEventListener('mousemove', onMouseMove);
-    // window.addEventListener('mouseup', onMouseUp);
-    
-}*/
