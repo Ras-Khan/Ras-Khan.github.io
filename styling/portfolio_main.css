@@ -132,17 +132,9 @@ body.mission_control_page {
     text-shadow: 0 0 5px var(--mc-accent);
 }
 
-.nav_button_control.exit_button {
+.sci-fi-button.exit_button {
     margin-top: auto;
-    border: 1px solid var(--mc-border);
-    text-align: center;
     margin-bottom: 1rem;
-}
-
-.nav_button_control.exit_button:hover {
-    background: var(--mc-accent);
-    color: #000;
-    border-color: var(--mc-accent);
 }
 
 

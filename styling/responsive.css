@@ -106,6 +106,10 @@
     #module_info_panel {
         margin-top: 2rem;
     }
+
+    .panel_header {
+        margin-left: 3rem;
+    }
 }
 
 @media (max-width: 1024px) {
@@ -356,6 +360,19 @@
         max-width: 400px;
         border-radius: 8px;
         letter-spacing: 1px;
+        margin-bottom: 80px;
+    }
+
+    #planetNavControls {
+        bottom: 80px; /* Moves the button higher on smaller screens for better accessibility */
+    }
+
+    #bottomControlPanel {
+        padding-bottom: 80px;
+    }
+
+    .sci-fi-button.exit_button {
+        margin-bottom: 80px;
     }
     
     /* Logo design page */
