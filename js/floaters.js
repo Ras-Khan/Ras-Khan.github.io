@@ -1,6 +1,13 @@
-function initializeFloaters() {
+function initializeFloaters(containerElement = null) {
+    const isCockpitView = !!containerElement;
+
     const rectangle = document.createElement("div");
-    rectangle.id = "floatingRectangle";
+    // Use a class for cockpit view to avoid ID conflicts and for specific styling
+    rectangle.className = isCockpitView ? 'floater_cockpit_view' : '';
+    if (!isCockpitView) {
+        rectangle.id = "floatingRectangle";
+    }
+
     rectangle.innerHTML = `
         <div class="rect_face rect_front"></div>
         <div class="rect_face rect_back"></div>
@@ -10,7 +17,59 @@ function initializeFloaters() {
         <div class="rect_face rect_bottom"></div>
     `;
 
+    if (isCockpitView) {
+        containerElement.appendChild(rectangle);
+
+        const floatingInterface = document.createElement("div");
+        floatingInterface.id = "floatingInterface";
+        floatingInterface.classList.add('cockpit_interface'); // Add a class for specific styling
+        floatingInterface.style.display = "none";
+        floatingInterface.innerHTML = `
+            <div id="floatingInterfaceTopBar"></div>
+            <button id="closeInterface">✕</button>
+            <div id="floatingInterfaceContent">
+                <h2>Contact</h2>
+                <a href="#"> <p> <img src="../img/mail.png"> r.sahangoekhan@gmail.com</p> </a>
+                <a href="#" target="_blank"> <p> <img src="../img/github.png"> https://github.com/Ras-Khan </p> </a>
+                <a href="#" target="_blank"> <p> <img src="../img/linkedIn.png"> https://www.linkedin.com/in/rashad-sahang/ </p> </a>
+            </div>
+            <div id="floatingInterfaceBottomBar"></div>
+        `;
+        containerElement.appendChild(floatingInterface);
+        
+        const openCockpitInterface = () => {
+            floatingInterface.style.display = 'block';
+            rectangle.style.animationPlayState = 'paused';
+            requestAnimationFrame(() => {
+                 floatingInterface.classList.add('visible');
+            });
+        };
+
+        const closeCockpitInterface = () => {
+            floatingInterface.classList.remove('visible');
+            rectangle.style.animationPlayState = 'running';
+        };
+
+        floatingInterface.addEventListener('transitionend', (e) => {
+            if (!floatingInterface.classList.contains('visible') && e.propertyName === 'opacity') {
+                floatingInterface.style.display = 'none';
+            }
+        });
+
+        rectangle.addEventListener('click', openCockpitInterface);
+
+        const closeButton = floatingInterface.querySelector('#closeInterface');
+        closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeCockpitInterface();
+        });
+
+        return;
+    }
+
+    // Old behaviour for an older version of the site
     document.body.appendChild(rectangle);
+
     const frontFace = rectangle.querySelector('.rect_front');
     const floatingInterface = document.createElement("div");
     floatingInterface.id = "floatingInterface";

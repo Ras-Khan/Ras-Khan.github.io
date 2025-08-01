@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
 :root {
@@ -27,13 +26,12 @@ body.mission_control_page {
 #cockpitContainer {
     display: grid;
     grid-template-columns: 300px 1fr;
-    grid-template-rows: 1fr auto; /* Allow bottom panel to size automatically */
+    grid-template-rows: 1fr auto; 
     gap: 0;
     padding: 0;
     height: 100vh;
 }
 
-/* Hamburger Menu */
 #hamburgerMenu {
     display: none;
     position: fixed;
@@ -57,7 +55,6 @@ body.mission_control_page {
 }
 
 
-/* Control Panel (Left) */
 #controlPanel {
     background: var(--mc-bg);
     border: 1px solid var(--mc-border);
@@ -198,10 +195,7 @@ body.mission_control_page {
 #viewscreenContent::-webkit-scrollbar-thumb { background-color: var(--mc-accent-dark); border-radius: 6px; border: 2px solid var(--mc-accent); }
 #viewscreenContent::-webkit-scrollbar-thumb:hover { background-color: var(--mc-accent); }
 
-@keyframes scanline {
-    0% { transform: translateY(-10%); }
-    100% { transform: translateY(110%); }
-}
+
 .viewscreen_scanline {
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -221,9 +215,11 @@ body.mission_control_page {
     display: block;
     animation: fade_in 0.5s ease-in-out;
 }
-@keyframes fade_in {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
+
+
+#architecture_view.active {
+    display: flex;
+    flex-direction: column;
 }
 
 .panel_title {
@@ -240,22 +236,19 @@ body.mission_control_page {
 }
 
 .panel_title::after { content: '_'; animation: blink 1s step-end infinite; }
-@keyframes blink { 50% { opacity: 0; } }
+
+.stats_container {
+    margin-top: 2rem;
+}
 
 #status_view .status_item { margin-bottom: 1.5rem; font-size: 0.9rem; }
 #status_view .status_item label { display: block; margin-bottom: 0.5rem; font-family: var(--mc-font-mono); text-transform: uppercase; }
 #status_view .status_bar_container { background: rgba(0,0,0,0.3); border: 1px solid var(--mc-accent-dark); padding: 2px; margin-bottom: 0.25rem; height: 12px; }
 #status_view .status_bar { background: linear-gradient(90deg, var(--mc-accent), var(--mc-text)); height: 100%; box-shadow: 0 0 8px var(--mc-accent); }
-#status_view .status_bar.warning { background: linear-gradient(90deg, var(--mc-warning), #ffda77); box-shadow: 0 0 8px var(--mc-warning); }
+#status_view .status_bar.js { background: linear-gradient(90deg, #f1e05a, white); box-shadow: 0 0 8px #f1e05a; }
+#status_view .status_bar.css { background: linear-gradient(90deg, #663399, white); box-shadow: 0 0 8px #663399; }
+#status_view .status_bar.html { background: linear-gradient(90deg, #e34c26, white); box-shadow: 0 0 8px #e34c26; }
 #status_view .status_item span { font-family: var(--mc-font-mono); color: var(--mc-text-heading); font-size: 0.8rem; }
-
-#logs_view .timeline { position: relative; padding-left: 2rem; border-left: 2px solid var(--mc-border); }
-#logs_view .log_entry { margin-bottom: 2.5rem; position: relative; }
-#logs_view .log_entry::before { content: ''; position: absolute; left: -2.6rem; top: 5px; width: 15px; height: 15px; background: var(--mc-accent-dark); border-radius: 50%; border: 3px solid var(--mc-accent); box-shadow: 0 0 10px var(--mc-accent); }
-#logs_view .log_stardate { font-family: var(--mc-font-mono); color: var(--mc-accent); font-weight: bold; margin-bottom: 0.25rem; }
-#logs_view .log_title { font-family: var(--mc-font-mono); color: var(--mc-text-heading); font-size: 1.25rem; margin: 0 0 0.5rem 0; }
-#logs_view .log_description { margin: 0; line-height: 1.6; color: var(--mc-text); }
-#logs_view .code_block { background: #011627; border-left: 3px solid var(--mc-accent); padding: 1rem; margin-top: 1rem; font-family: var(--mc-font-mono); font-size: 0.85rem; overflow-x: auto; white-space: pre-wrap; border-radius: 0 4px 4px 0; }
 
 /* Bottom Panel */
 #bottomControlPanel {
@@ -357,167 +350,208 @@ body.mission_control_page {
     opacity: 0.6;
 }
 
-/* Component Views */
-.view_panel.component_view {
-    display: none; /* Hidden by default */
-    flex-direction: column;
-    height: calc(100% - 4rem); /* Full height minus padding */
-    position: absolute;
-    width: calc(100% - 4rem);
+.redundant_label {
+    color: red;
+    text-shadow: none;
 }
 
-.view_panel.component_view.active {
-    display: flex; /* Use flex to control layout */
+/* Architecture View */
+#architecture_view p {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
 }
 
-.component_container {
-    flex-grow: 1;
+#blueprint_wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
     gap: 2rem;
-    padding-top: 1rem;
+    margin-top: 1rem;
+    flex-grow: 1;
+    min-height: 0;
 }
 
-.component_description_panel {
-    flex: 1 1 45%;
-    color: var(--mc-text);
-    padding-right: 2rem;
-    align-self: flex-start;
-    max-height: 90%;
-    overflow-y: auto;
+#blueprint_container {
+    flex: 2;
+    position: relative;
+    display: grid;
+    grid-template-areas:
+        "styles     main        main    universe_entry  universe_entry"
+        "logo_page  game_page   .       cockpit         cockpit"
+        "logo_js    game_js     .       cockpit         cockpit"
+        "logo      .            camera  core            stars"
+        "loader    .            planets core            galaxies";
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 1.5rem;
+    background-color: rgba(0, 191, 255, 0.03);
+    border: 1px solid var(--mc-border);
+    padding: 1rem;
+    background-image:
+        linear-gradient(rgba(42, 111, 151, 0.5) 1px, transparent 1px),
+        linear-gradient(to right, rgba(42, 111, 151, 0.5) 1px, transparent 1px);
+    background-size: 30px 30px;
+    border-radius: 4px;
+    overflow: auto;
+
     scrollbar-width: thin;
     scrollbar-color: var(--mc-accent-dark) transparent;
 }
 
-.component_description_panel::-webkit-scrollbar { width: 6px; }
-.component_description_panel::-webkit-scrollbar-track { background: transparent; }
-.component_description_panel::-webkit-scrollbar-thumb { background-color: var(--mc-accent-dark); border-radius: 3px; }
+#blueprint_container::-webkit-scrollbar { width: 8px; height: 8px; }
+#blueprint_container::-webkit-scrollbar-track { background: transparent; }
+#blueprint_container::-webkit-scrollbar-thumb { background-color: var(--mc-accent-dark); border-radius: 4px; }
+#blueprint_container::-webkit-scrollbar-corner { background: transparent; }
 
-.component_description_panel h3 {
+.blueprint_module {
+    background-color: rgba(13, 33, 66, 0.8);
+    border: 1px solid var(--mc-accent);
     color: var(--mc-text-heading);
     font-family: var(--mc-font-mono);
+    font-size: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    box-shadow: 0 0 8px rgba(0, 191, 255, 0.2), inset 0 0 10px rgba(0,0,0,0.4);
+    z-index: 2;
+    min-height: 80px;
+}
+
+.blueprint_module .module_label {
+    font-size: 0.7rem;
     text-transform: uppercase;
+    color: var(--mc-warning);
+    margin-top: 0.25rem;
+    letter-spacing: 1px;
+}
+
+.blueprint_module:hover {
+    background-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 15px var(--mc-accent);
+    z-index: 3;
+}
+
+.blueprint_module.active {
+    background-color: var(--mc-accent);
+    box-shadow: 0 0 20px var(--mc-accent);
+}
+.blueprint_module.active span {
+    color: #ffffff;
+}
+
+.blueprint_module.active .module_label {
+    color: #8c03ff;
+}
+
+
+.blueprint_module.core {
+    grid-area: core;
+    background-color: rgba(0, 191, 255, 0.15);
     font-size: 1.1rem;
-    margin-top: 0;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--mc-border);
-    padding-bottom: 0.5rem;
+    border-color: var(--mc-warning);
 }
 
-.component_description_panel p {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
+.blueprint_module.util { background-color: rgba(42, 111, 151, 0.7); }
+.blueprint_module.component {
+    background-color: rgba(173, 232, 244, 0.1);
+    border-style: dashed;
 }
-.component_description_panel p:last-child { margin-bottom: 0; }
-
-.component_model_viewer {
-    flex: 1 1 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    position: relative;
-    border-left: 1px solid var(--mc-border);
-    padding-left: 2rem;
+.blueprint_module.router {
+    background-color: rgba(255, 183, 3, 0.1);
+    border-color: var(--mc-warning);
+}
+.blueprint_module.page {
+    background-color: rgba(10, 10, 10, 0.5);
+    border-color: var(--mc-text);
 }
 
-/* Override component default styles to fit in the viewer */
-.component_container .glass_container {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    height: auto !important;
-    transform: none !important;
-    pointer-events: auto;
-    cursor: default !important;
-    --cube-width: 400px;
-    --cube-height: 240px;
-}
 
-.component_container .glass_cube {
-    transform: rotateX(0deg) rotateY(0deg) scale(0.8);
-}
+.blueprint_module[data-module-id="camera"] { grid-area: camera; }
+.blueprint_module[data-module-id="stars"] { grid-area: stars; }
+.blueprint_module[data-module-id="planets"] { grid-area: planets; }
+.blueprint_module[data-module-id="galaxies"] { grid-area: galaxies; }
+.blueprint_module[data-module-id="loader"] { grid-area: loader; }
+.blueprint_module[data-module-id="logo"] { grid-area: logo; }
+.blueprint_module[data-module-id="main"] { grid-area: main; }
+.blueprint_module[data-module-id="game_page"] { grid-area: game_page; }
+.blueprint_module[data-module-id="logo_page"] { grid-area: logo_page; }
+.blueprint_module[data-module-id="game_js"] { grid-area: game_js; }
+.blueprint_module[data-module-id="logo_js"] { grid-area: logo_js; }
+.blueprint_module[data-module-id="cockpit"] { grid-area: cockpit; }
+.blueprint_module[data-module-id="universe_entry"] { grid-area: universe_entry; }
+.blueprint_module[data-module-id="styles"] { grid-area: styles; }
 
-.component_container .hexagon_container {
-    perspective: 1000px;
-    width: 180px;
-    height: 60px;
-    overflow: visible;
-}
 
-.component_container .hexagon {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-}
-
-.component_container .hexagon .face {
+#blueprint_connectors {
     position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 180px;
-    height: 60px;
-    background: rgba(0, 191, 255, 0.05);
-    border: 1px solid var(--mc-accent);
-    backdrop-filter: none;
-    color: var(--mc-text-heading);
-    font-size: 1rem;
-    font-weight: bold;
-    backface-visibility: visible;
-}
-
-.component_model_viewer .project_content {
+    top: 0;
     left: 0;
     width: 100%;
-    max-width: 100%;
-    padding: 1rem;
-    justify-content: center; 
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.component_model_viewer .project_type_1 {
-    padding: 0; 
+#blueprint_connectors line {
+    stroke: var(--mc-accent-dark);
+    stroke-width: 2px;
+    stroke-dasharray: 4 4;
+    animation: dash_flow 2s linear infinite;
+    opacity: 0.3;
+    transition: opacity 0.3s ease, stroke-width 0.3s ease, stroke 0.3s ease;
 }
 
-.component_model_viewer .project_type_1 h1 {
-    font-size: 1.1rem;
-    padding: 0 0 0.5rem 0;
+#blueprint_connectors line.highlighted {
+    opacity: 0.6;
+    stroke: var(--mc-warning);
+    stroke-width: 3px;
 }
 
-.component_model_viewer .project_type_1 img {
-    max-width: 90%;
-    max-height: 110px;
+#module_info_panel {
+    flex: 1.2;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--mc-border);
     border-radius: 4px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    min-height: 0;
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--mc-accent-dark) transparent;
 }
 
-.component_model_viewer .project_type_1 p,
-.component_model_viewer .project_type_1 a {
-    display: none;
+#module_info_panel::-webkit-scrollbar { width: 8px; }
+#module_info_panel::-webkit-scrollbar-track { background: transparent; }
+#module_info_panel::-webkit-scrollbar-thumb { background-color: var(--mc-accent-dark); border-radius: 4px; }
+
+
+#module_info_panel h3 {
+    font-family: var(--mc-font-mono);
+    color: var(--mc-text-heading);
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    flex-shrink: 0;
 }
-
-
-/* Placeholder for future component models */
-.placeholder_model {
-  width: 70%;
-  height: 60%;
-  border: 2px dashed var(--mc-border);
-  background: rgba(0, 191, 255, 0.03);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--mc-accent-dark);
-  font-family: var(--mc-font-mono);
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  box-shadow: inset 0 0 25px var(--mc-glow);
-  text-shadow: 0 0 5px var(--mc-accent);
+#module_info_panel p {
+    line-height: 1.6;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-bottom: 1.5rem;
 }
-
-.placeholder_model::after {
-  content: '[ MODEL UNAVAILABLE ]';
-  opacity: 0.7;
+#module_info_panel .code_block {
+    background: #011627;
+    border-left: 3px solid var(--mc-accent);
+    padding: 1rem;
+    font-family: var(--mc-font-mono);
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    border-radius: 0 4px 4px 0;
+    overflow-y: auto;
 }

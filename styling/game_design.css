@@ -1,5 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap'); /* A retro gaming font */
 
 :root {
     --gd-font_heading: 'Press Start 2P', cursive;
@@ -57,7 +56,7 @@ body.game_design_page {
     border-radius: 0 35px 35px 0;
 }
 
-/* --- Controller Buttons --- */
+/* Controller Buttons */
 .analog_stick {
     width: 70px;
     height: 70px;
@@ -257,7 +256,7 @@ body.game_design_page {
     margin-top: 150px;
 }
 
-/* --- Screen --- */
+/* Screen */
 #screen_bezel {
     flex-grow: 1;
     background: #111;

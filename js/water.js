@@ -1,14 +1,23 @@
-function initializeWater() {
-    const canvas = document.getElementById("waterCanvas");
+/* Redundant function, not used anymore. Might use it as a future model to showcase it */
+
+function initializeWater(options = {}) {
+    const canvas = options.canvasElement || document.getElementById("waterCanvas");
+    if (!canvas) {
+        console.error("Water canvas element could not be found.");
+        return null;
+    }
     const ctx = canvas.getContext("2d");
 
     const inc = 0.01;
     let offsetX = 0;
     let offsetY = 0;
 
-    const nightSky = document.getElementById("nightSky");
-    const skyCanvas = document.createElement("canvas");
-    const skyCtx = skyCanvas.getContext("2d");
+    const skyCanvasSource = options.skyCanvasElement || document.getElementById("nightSky");
+    const hasSkySource = !!skyCanvasSource;
+    
+    const skyReflectionCanvas = document.createElement("canvas");
+    const skyReflectionCtx = skyReflectionCanvas.getContext("2d");
+    let animationFrameId = null;
 
     function noise(x, y) {
         return (
@@ -17,20 +26,51 @@ function initializeWater() {
             Math.sin(x * 0.5 + y * 0.6)
         ) * 0.33;
     }
+    
+    function createStaticSkyReflection() {
+        const parent = canvas.parentElement;
+        if (!parent || parent.clientWidth === 0) return; // If there is nothing to reflect, just skip it
+
+        skyReflectionCanvas.width = parent.clientWidth;
+        skyReflectionCanvas.height = parent.clientHeight * 2; // Taller for reflection
+        skyReflectionCtx.fillStyle = '#000913';
+        skyReflectionCtx.fillRect(0, 0, skyReflectionCanvas.width, skyReflectionCanvas.height);
+        for (let i = 0; i < 200; i++) {
+            skyReflectionCtx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`;
+            skyReflectionCtx.beginPath();
+            skyReflectionCtx.arc(Math.random() * skyReflectionCanvas.width, Math.random() * skyReflectionCanvas.height, Math.random() * 1.5, 0, Math.PI * 2);
+            skyReflectionCtx.fill();
+        }
+    }
 
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight * 0.5;
+        if (options.canvasElement) {
+            const parent = options.canvasElement.parentElement;
+            if (parent) {
+                canvas.width = parent.clientWidth;
+                canvas.height = parent.clientHeight;
+            }
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.5;
+        }
+
+        if (!hasSkySource) {
+            createStaticSkyReflection();
+        }
     }
 
     function captureNightSky() {
-        if (!nightSky) return;
-        const skyContext = nightSky.getContext("2d");
-        if (!skyContext) return;
+        if (!hasSkySource) return;
 
-        skyCanvas.width = nightSky.clientWidth;
-        skyCanvas.height = nightSky.clientHeight;
-        skyCtx.drawImage(skyContext.canvas, 0, 0);
+        if (skyCanvasSource && skyCanvasSource.getContext) {
+            const skyContext = skyCanvasSource.getContext("2d");
+            if (!skyContext) return;
+
+            skyReflectionCanvas.width = skyCanvasSource.clientWidth;
+            skyReflectionCanvas.height = skyCanvasSource.clientHeight;
+            skyReflectionCtx.drawImage(skyContext.canvas, 0, 0);
+        }
     }
 
     window.addEventListener("resize", resizeCanvas);
@@ -48,7 +88,7 @@ function initializeWater() {
             const depthFactor = y / canvas.height;
             const distortion = noise((y + offsetX * 100) * 0.01, offsetY * 10) * 20 * (0.3 + depthFactor * 1.2);
             ctx.drawImage(
-                skyCanvas,
+                skyReflectionCanvas,
                 0, y, canvas.width, stripHeight,
                 distortion * depthFactor, -canvas.height + y,
                 canvas.width * (1 + depthFactor * 0.2),
@@ -121,7 +161,22 @@ function initializeWater() {
         drawWaves();
         drawReflectionRipples();
 
-        requestAnimationFrame(animate);
+        animationFrameId = requestAnimationFrame(animate);
     }
-    animate();
+    
+    const start = () => {
+        if (!animationFrameId) {
+            animate();
+        }
+    };
+
+    const stop = () => {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+        // Not removing resize listener, as it might be needed if component is resized while hidden
+    };
+
+    return { start, stop };
 }

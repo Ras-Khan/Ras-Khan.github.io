@@ -75,14 +75,9 @@ function initializeLogoDesignPage() {
             left: `
                 <div class="content_section_ld">
                     <h1>Conceptualisation</h1>
-                    <p> [placeholder] </p>
-                    <p> [placeholder] </p>
-                    <ul>
-                        <li> [placholder] </li>
-                        <li> [placholder] </li>
-                        <li> [placholder] </li>
-                    </ul>
-                    <p> [placeholder] </p>
+                    <p>With my inspiration sorted, I started sketching. The main goal was to create a symmetrical, triangle-based design that incorporated my initials, 'R' and 'S'. I wanted the 'R' to subtly mirror the shape of the 'S', creating a clever visual that isn't obvious at first glance.</p>
+                    <p>I experimented with adding "wings" to the design, but it felt too complicated and didn't fit the clean, bold aesthetic I wanted. It was also important that the logo was made in simple shapes, as this would make it easier to create in an SVG.</p>
+                    <p>In the end, I decided to make the 'R' an exact mirror of the 'S'. This approach kept the logo's simplicity and symmetry.</p>
                 </div>`,
             right: `
                 <div class="content_section_ld content_section_ld_visual">
@@ -108,22 +103,38 @@ function initializeLogoDesignPage() {
             left: `
                 <div class="content_section_ld">
                     <h1>Realisation</h1>
-                    <p> [placeholder] </p>
-                    <p> [placeholder] </p>
-                    <p> [placeholder] </p>
+                    <p>With the logo's shape finalized, the next step was choosing the color palette. My favorite color, a deep cyan-green, was the starting point. I explored several color theory models to find harmonious and contrasting companions.</p>
+                    <p>Below are some of the schemes I considered, including analogous, split-complementary, and triadic. While each had its merits, the triadic combination of green, purple, and gold ultimately provided the bold, balanced, and high-contrast look I was aiming for in the final design.</p>
+                    <div class="color_palettes_container">
+                        <div class="logo_info_panel">
+                            <h3>Cyan</h3>
+                            <div class="color_palette">
+                                <div class="color_swatch" style="background-color: #009B80;"><span>#009B80</span></div>
+                                <div class="color_swatch" style="background-color: #80009B;"><span>#80009B</span></div>
+                                <div class="color_swatch" style="background-color: #9B8000;"><span>#9B8000</span></div>
+                            </div>
+                        </div>
+                        <div class="logo_info_panel">
+                            <h3>Blue & Bright</h3>
+                            <div class="color_palette">
+                                <div class="color_swatch" style="background-color: #0089CE;"><span>#0089CE</span></div>
+                                <div class="color_swatch" style="background-color: #89CE00;"><span>#89CE00</span></div>
+                                <div class="color_swatch" style="background-color: #CE0089;"><span>#CE0089</span></div>
+                            </div>
+                        </div>
+                        <div class="logo_info_panel">
+                            <h3>Darker</h3>
+                            <div class="color_palette">
+                                <div class="color_swatch" style="background-color: #09003A;"><span>#09003A</span></div>
+                                <div class="color_swatch" style="background-color: #3A0900;"><span>#3A0900</span></div>
+                                <div class="color_swatch" style="background-color: #003A09;"><span>#003A09</span></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>`,
             right: `
                 <div class="content_section_ld content_section_ld_visual">
                     <div class="realisation_content">
-                        <div class="logo_info_panel">
-                            <h3>Primary color palette</h3>
-                            <div class="color_palette">
-                                <div id="swatchGreen" class="color_swatch"><span>#009B80</span></div>
-                                <div id="swatchPurple" class="color_swatch"><span>#80009B</span></div>
-                                <div id="swatchDark" class="color_swatch"><span>#212934</span></div>
-                                <div id="swatchLight" class="color_swatch"><span>#F0F2F5</span></div>
-                            </div>
-                        </div>
                         <div class="color_exploration_display">
                             <h3>Testing color palettes</h3>
                             <div class="color_variant_card">
@@ -142,25 +153,26 @@ function initializeLogoDesignPage() {
             left: `
                 <div class="content_section_ld">
                     <h1>Integration</h1>
-                    <p>[placeholder]</p>
-                    <p>[placeholder]</p>
+                    <p>With the final design complete, the next step was to integrate it into my resume and business card.</p>
+                    <p>On my resume, accessibility was a high priority. Using a color blindness simulation tool¹, I wanted to make sure my logo stays vibrant across most color blindness types, so I settled on a blue and yellow combination.</p>
+                    <p>For the business card, I took a more expressive route. The logo covers the entire front, to immediately showcase my design style.</p>
+                    <p style="font-size: 0.8rem; margin-top: 2rem; color: #666;"><small>¹ Mathis, D. <em>Color Blindness Simulator</em>, retrieved from <a href="https://davidmathlogic.com/colorblind/" target="_blank" rel="noopener noreferrer">davidmathlogic.com/colorblind</a>.</small></p>
                 </div>`,
             right: `
                 <div class="content_section_ld content_section_ld_visual">
-                    <div class="versatility_showcase">
-                        <h3>[placeholder]</h3>
-                        <div class="mockup_gallery">
-                            <div class="mockup light">
-                                ${logoSvg}
-                                <p>[placeholder]</p>
+                    <div class="sketch_gallery">
+                        <div class="sketch_display" style="transform: rotate(1deg);">
+                            <img src="../img/logo_design_img/resume_logo.png" alt="Logo used on a resume">
+                            <div class="sketch_caption">
+                                <h3>Resume Application</h3>
+                                <p>The color-accessible version of my logo on the resume header.</p>
                             </div>
-                            <div class="mockup dark">
-                                ${logoSvg}
-                                <p>[placeholder]</p>
-                            </div>
-                            <div class="mockup monochrome">
-                                ${logoSvg}
-                                <p>[placeholder]</p>
+                        </div>
+                        <div class="sketch_display" style="transform: rotate(-1.5deg);">
+                            <img src="../img/logo_design_img/bc_logo.png" alt="Logo used on a business card">
+                            <div class="sketch_caption">
+                                <h3>Business Card Design</h3>
+                                <p>The logo on the front side of my business card.</p>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-
+// Has to be vars instead of lets because other files use these variables
 var cameraX, cameraY, cameraZ;
 var rotationX, rotationY;
 var userInteracted, interactionTimeout;

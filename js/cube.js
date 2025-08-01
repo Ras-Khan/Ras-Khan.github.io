@@ -124,7 +124,7 @@ function initializeCube() {
         isExpanded = true;
     });
 
-
+    /* Older function used in the first version, redundant now */
     closeButton.addEventListener("click", function (e) {
         e.stopPropagation(); // No clicking while its being closed
 
@@ -261,7 +261,6 @@ function initializeCube() {
             });
         }
     }
-
 
     function nextProject(dir) {
         const projectsToRemove = frontFace.querySelectorAll(".project_content");

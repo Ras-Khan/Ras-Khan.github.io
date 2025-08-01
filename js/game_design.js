@@ -1,4 +1,3 @@
-
 function initializeGameDesignPage() {
     const screenElement = document.getElementById('console_screen');
     const headerText = document.querySelector('#screen_header h1');

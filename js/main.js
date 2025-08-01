@@ -20,10 +20,18 @@
     if (document.getElementById('cockpitContainer')) {
         loadScript('js/cube.js', () => {
             loadScript('js/hexagon.js', () => {
-                loadScript('js/cockpit.js', () => {
-                    if (typeof initializeCockpit === 'function') {
-                        initializeCockpit();
-                    }
+                loadScript('js/floaters.js', () => {
+                    loadScript('js/3Dlogo.js', () => {
+                        loadScript('js/hoverEffect.js', () => {
+                            loadScript('js/nightsky.js', () => {
+                                loadScript('js/cockpit.js', () => {
+                                    if (typeof initializeCockpit === 'function') {
+                                        initializeCockpit();
+                                    }
+                                });
+                            });
+                        });
+                    });
                 });
             });
         });

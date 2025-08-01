@@ -1,4 +1,4 @@
-const idleTimer = 5000; 
+const idleTimer = 5000; // To revert to cinematic camera when the user stops moving or touching anything, this is in ms
 
 function project3DTo2D(pos) {
     const dx = pos.x - cameraX;
@@ -50,10 +50,10 @@ function resetIdleTimer() {
 }
 
 function attachCameraEventListeners(canvasElement) {
-    // MOUSE EVENTS
+    // Cursor stuff
     canvasElement.addEventListener("mousedown", (e) => {
         userInteracted = true;
-        isPlanetFocusMode = false; // Break out of planet focus nav
+        isPlanetFocusMode = false; // Break out of the focussed planet 
         resetIdleTimer();
         isDragging = true;
         lastMouseX = e.clientX;
@@ -82,12 +82,13 @@ function attachCameraEventListeners(canvasElement) {
         isDragging = false;
     });
 
-    // TOUCH EVENTS
+    // Touch screen stuff
+    
     canvasElement.addEventListener("touchstart", (e) => {
         if (e.touches.length === 1) {
             e.preventDefault(); // Prevent default touch actions like scrolling
             userInteracted = true;
-            isPlanetFocusMode = false; // Break out of planet focus nav
+            isPlanetFocusMode = false; // Break out of the focussed planet
             resetIdleTimer();
             isDragging = true;
             lastMouseX = e.touches[0].clientX;

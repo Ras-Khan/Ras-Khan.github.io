@@ -33,9 +33,10 @@ function attachHighlightEffect(targetElement) {
         const centerX = rect.left + rect.width / 2 + scrollX + shiftX;
         const beamBottom = rect.top + scrollY + rect.height * 0.64 * heightScale + (150 - rect.height * 0.25);
     
+        const topOffset = -300; // Start the beam further up so it looks like its coming down from the heavens
         beam.style.left = `${centerX}px`;
-        beam.style.top = `0px`;
-        beam.style.height = `${beamBottom}px`;
+        beam.style.top = `${topOffset}px`;
+        beam.style.height = `${beamBottom - topOffset}px`; // Adjust height to compensate
     }
         
     

@@ -153,7 +153,7 @@ function initializeNightSky() {
             .slice(0, count)
             .map(item => item.star);
 
-    // Throttle for better performance
+    // Throttle so it doesn't lagg 
     const throttle = (func, limit) => {
         let lastFunc, lastRan;
         return function(...args) {
@@ -196,4 +196,119 @@ function initializeNightSky() {
 
     resizeCanvas();
     drawNightSky();
+}
+
+/* As a model to showcase the old behaviour */
+function initializeConstellationModel(containerElement) {
+    if (!containerElement) return null;
+
+    const canvas = document.createElement('canvas');
+    const overlay = document.createElement('div');
+    containerElement.appendChild(canvas);
+    containerElement.appendChild(overlay);
+
+    const context = canvas.getContext('2d');
+    let stars = [];
+    let mouseX = null, mouseY = null;
+    let animationFrameId = null;
+
+    const getRandomColor = () => 'rgba(255, 255, 255, ';
+
+    const resizeCanvas = () => {
+        const rect = containerElement.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+        createStars();
+    };
+
+    const createStars = () => {
+        if (canvas.width <= 0) return;
+        stars = Array.from({ length: Math.min(300, canvas.width / 4) }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 1.5 + 0.2,
+            alpha: Math.random() * 0.5 + 0.3,
+            alphaChange: (Math.random() * 0.01) - 0.005,
+            color: getRandomColor()
+        }));
+    };
+
+    const draw = () => {
+        if (!context) return;
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        
+        let connectedStars = (mouseX !== null && mouseY !== null) ? findNearestStars(mouseX, mouseY, 5) : [];
+
+        if (connectedStars.length > 1) {
+            context.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+            context.lineWidth = 0.6;
+            context.beginPath();
+            context.moveTo(connectedStars[0].x, connectedStars[0].y);
+            for (let i = 1; i < connectedStars.length; i++) {
+                context.lineTo(connectedStars[i].x, connectedStars[i].y);
+            }
+            context.stroke();
+        }
+
+        stars.forEach(star => {
+            star.alpha += star.alphaChange;
+            if (star.alpha <= 0.2 || star.alpha >= 1) star.alphaChange *= -1;
+
+            const isConnected = connectedStars.includes(star);
+            context.fillStyle = `${star.color}${isConnected ? 1 : star.alpha})`;
+            context.shadowBlur = isConnected ? 10 : 5;
+            context.shadowColor = `${star.color}0.8)`;
+            context.beginPath();
+            context.arc(star.x, star.y, isConnected ? star.radius + 1 : star.radius, 0, Math.PI * 2);
+            context.fill();
+        });
+        context.shadowBlur = 0;
+
+        animationFrameId = requestAnimationFrame(draw);
+    };
+
+    const findNearestStars = (x, y, count) => {
+        return stars.map(star => ({ star, distance: Math.hypot(star.x - x, star.y - y) }))
+            .sort((a, b) => a.distance - b.distance)
+            .slice(0, count)
+            .map(item => item.star);
+    };
+
+    const throttle = (func, limit) => {
+        let inThrottle;
+        return function(...args) {
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        }
+    };
+
+    overlay.addEventListener('mousemove', throttle((event) => {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = event.clientX - rect.left;
+        mouseY = event.clientY - rect.top;
+    }, 30));
+
+    overlay.addEventListener('mouseleave', () => {
+        mouseX = null;
+        mouseY = null;
+    });
+
+    const startAnimation = () => {
+        if (animationFrameId) return;
+        resizeCanvas();
+        draw();
+    };
+
+    const stopAnimation = () => {
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    };
+
+    return { start: startAnimation, stop: stopAnimation };
 }

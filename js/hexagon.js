@@ -4,7 +4,7 @@ function initializeHexagon(containerElement) {
 
     // Is it in the showroom?
     const isCockpit = !!containerElement.closest('.component_view');
-    const hexagonSize = isCockpit ? 52 : 80;
+    const hexagonSize = isCockpit ? 52 : 80; // 80 is the old size for the older version of the website
 
     const hexagon = containerElement.querySelector('.hexagon');
     if (!hexagon) return null;

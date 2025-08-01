@@ -1,5 +1,6 @@
 // instantly execute the function
 (function() {
+    // Path differences between the index and all other pages
     const isPagesDir = window.location.pathname.includes('/pages/');
     const pathPrefix = isPagesDir ? '../' : './';
 
@@ -10,9 +11,9 @@
         "styling/space.css",
         "styling/planet.css",
         "styling/planet_rings.css",
-        "styling/home.css",
         "styling/effects.css",
-        "styling/mission_control.css",
+        "styling/portfolio_main.css",
+        "styling/portfolio_models.css",
         "styling/logo_design.css",
         "styling/game_design.css",
         "styling/responsive.css"

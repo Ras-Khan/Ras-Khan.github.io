@@ -1,4 +1,3 @@
-
 function initializeGalaxiesArray() {
     const galaxyData = [
         {

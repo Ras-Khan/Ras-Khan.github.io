@@ -1,4 +1,3 @@
-/* Planet styling */
 .planetWrapper {
   position: absolute;
   width: 100px;
@@ -30,7 +29,7 @@
     box-shadow:
         inset -10px -10px 20px rgba(0, 0, 0, 0.4),
         inset 5px 5px 15px rgba(255, 255, 255, 0.08);
-    animation: slowTilt 40s ease-in-out infinite alternate, neutral_pulse_glow 2s ease-in-out infinite;
+    animation: neutral_pulse_glow 2s ease-in-out infinite;
 }
 
 .planetHighlight {

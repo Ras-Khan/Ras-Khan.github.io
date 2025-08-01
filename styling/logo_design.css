@@ -43,10 +43,17 @@ body.logo_design_page {
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.4), inset 0 0 150px rgba(0, 0, 0, 0.2);
 }
 
+#sketchbookArea {
+    width: 95%;
+    max-width: 1800px;
+    display: flex;
+    flex-direction: column;
+}
+
 #bookmarksNav {
     display: flex;
-    width: 95%;
-    max-width: 1400px;
+    width: 100%;
+    box-sizing: border-box;
     padding-left: 20px;
     z-index: 10;
     margin-bottom: -1px;
@@ -152,17 +159,6 @@ body.logo_design_page {
 #paperContentLeft,
 #paperContentRight {
     animation: fade_in_content 0.5s ease-in-out;
-}
-
-@keyframes fade_in_content {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .content_section_ld {
@@ -272,7 +268,7 @@ body.logo_design_page {
     line-height: 1.5;
     color: #555;
     margin: 0;
-    max-width: 100%; /* Override default max-width */
+    max-width: 100%; 
 }
 
 .logo_display_container {
@@ -498,6 +494,34 @@ body.logo_design_page {
 
 #swatchLight {
     background: var(--ld-paper-color);
+}
+
+.color_palettes_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.color_palettes_container .logo_info_panel {
+    flex: 1 1 200px;
+    max-width: 280px;
+    background: rgba(0,0,0,0.02);
+    border: 1px dashed var(--ld-grid-color);
+    border-radius: 4px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.color_palettes_container .logo_info_panel h3 {
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.color_palettes_container .color_palette {
+    justify-content: center;
+    margin: 1rem 0 0;
 }
 
 .color_exploration_display {
@@ -777,7 +801,6 @@ body.logo_design_page {
     background-color: #8f8883;
 }
 
-/* 3D Logo on Sketchbook */
 .logo_display_container .logo_3d_sketchbook_wrapper {
     perspective: 1600px;
     width: 100%;

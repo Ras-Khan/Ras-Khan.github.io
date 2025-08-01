@@ -1,4 +1,5 @@
 function initializeStarsArray() {
+    // Fancy math that I don't really understand, had copilot help me with this
     for (let i = 0; i < starCount; i++) {
         let hue;
         const rand = Math.random();

@@ -20,9 +20,8 @@
                     <div class="panel_logo"></div>
                     <span>CONTROL</span>
                 </div>
-                <button class="nav_button_control active" data-view="status_view">[Placeholder]</button>
-                <button class="nav_button_control" data-view="logs_view">[Placeholder]</button>
-                <button class="nav_button_control" data-view="schematics_view">[Placeholder]</button>
+                <button class="nav_button_control active" data-view="status_view">Summary</button>
+                <button class="nav_button_control" data-view="architecture_view">Architecture</button>
                 <a href="../index.html" class="nav_button_control exit_button">EXIT TO HOME</a>
             </nav>
     
@@ -31,78 +30,93 @@
                 <div class="viewscreen_scanline"></div>
                 <div id="viewscreenContent">
                     <div id="status_view" class="view_panel active">
-                        <h2 class="panel_title">[Placeholder]</h2>
-                        <div class="status_item">
-                            <label> [placeholder] </label>  
-                            <div class="status_bar_container"><div class="status_bar" style="width: 100%;"></div></div>
-                            <span> [placeholder] </span>
-                        </div>
-                        <div class="status_item">
-                            <label> [placeholder] </label>  
-                            <div class="status_bar_container"><div class="status_bar" style="width: 100%;"></div></div>
-                            <span> [placeholder] </span>
-                        </div>
-                        <div class="status_item">
-                            <label> [placeholder] </label>  
-                            <div class="status_bar_container"><div class="status_bar" style="width: 100%;"></div></div>
-                            <span> [placeholder] </span>
-                        </div>
-                        <div class="status_item">
-                            <label> [placeholder] </label>  
-                            <div class="status_bar_container"><div class="status_bar" style="width: 95%;"></div></div>
-                            <span> [placeholder] </span>
-                        </div>
-                        <div class="status_item">
-                            <label> [placeholder] </label>  
-                            <div class="status_bar_container"><div class="status_bar warning" style="width: 35%;"></div></div>
-                            <span> [placeholder] </span>
-                        </div>
-                    </div>
+                        <h2 class="panel_title">Summary</h2>
+                        <p>This portfolio is my personal project to showcase my work in a creative way. I built it from the ground up without the use of any frameworks, templates or libraries; it's a live demonstration of my skills in front-end development and UI/UX design.</p>
+                        <p>This section gives a behind-the-scenes look at this portfolio's development. Below are some (redundant) models of the design process.</p>
 
-                    <div id="logs_view" class="view_panel">
-                        <h1 class="panel_title">[Placeholder]</h1>
-                        <div class="timeline">
-                             <div class="log_entry">
-                                <div class="log_stardate">001</div>
-                                <h3 class="log_title">Initial sketches</h3>
-                                <p class="log_description">Initial concept sketches and brainstorming. </p>
+                        <div class="stats_container">
+                            <div class="status_item">
+                                <label> JavaScript </label>  
+                                <div class="status_bar_container"><div class="status_bar js" style="width: 44.0%;"></div></div>
+                                <span>44.0%</span>
                             </div>
-                            <div class="log_entry">
-                                <div class="log_stardate">002</div>
-                                <h3 class="log_title">Concept</h3>
-                                <p class="log_description">Structuring the HTML and setting up the initial JavaScript framework. Basic camera controls and the 3D-to-2D projection code:.</p>
-                                <pre class="code_block"><code>function project3DTo2D(pos) {
-    const dx = pos.x - cameraX;
-    // ... matrix math ...
-    return { x: x2d, y: y2d, scale, zRot };
-}</code></pre>
+                            <div class="status_item">
+                                <label> CSS </label>  
+                                <div class="status_bar_container"><div class="status_bar css" style="width: 39.9%;"></div></div>
+                                <span>39.9%</span>
                             </div>
-                            <div class="log_entry">
-                                <div class="log_stardate">003</div>
-                                <h3 class="log_title">[placeholder]</h3>
-                                <p class="log_description">Designing the visual elements with CSS. This involved creating the parallax background, styling the planets with animated textures, and designing the glowing rings of text.</p>
-                            </div>
-                            <div class="log_entry">
-                                <div class="log_stardate">004</div>
-                                <h3 class="log_title">[placeholder]</h3>
-                                <p class="log_description">Implementing the core animation loop in JavaScript. .</p>
+                            <div class="status_item">
+                                <label> HTML </label>  
+                                <div class="status_bar_container"><div class="status_bar html" style="width: 16.1%;"></div></div>
+                                <span>16.1%</span>
                             </div>
                         </div>
                     </div>
 
-                    <div id="schematics_view" class="view_panel">
-                        <h2 class="panel_title">[Placeholder]</h2>
-                        <p> [placeholder] </p>
+                    <div id="architecture_view" class="view_panel">
+                        <h1 class="panel_title">System Architecture</h1>
+                        <p>Here's a look at the technical blueprint of the portfolio. I designed it to be modular, with a main script that loads only the necessary files for each page. The 3D universe page has its own core engine that handles rendering everything on the homepage. Click on any module to learn more about it with some example code snippets.</p>
+                        <div id="blueprint_wrapper">
+                            <div id="blueprint_container">
+                                <!-- Loaders -->
+                                <div class="blueprint_module router" data-module-id="main">
+                                    <span>main.js</span>
+                                    <div class="module_label">File loader</div>
+                                </div>
+                                <div class="blueprint_module router" data-module-id="universe_entry">
+                                    <span>main_universe.js</span>
+                                    <div class="module_label">Homepage</div>
+                                </div>
+                                <div class="blueprint_module util" data-module-id="styles">
+                                    <span>load_styles.js</span>
+                                    <div class="module_label">CSS Loader</div>
+                                </div>
+                    
+                                <!-- HTML Pages -->
+                                <div class="blueprint_module page" data-module-id="game_page"><span>game_design.html</span></div>
+                                <div class="blueprint_module page" data-module-id="logo_page"><span>logo_design.html</span></div>
+                    
+                                <!-- Page-specific JS -->
+                                <div class="blueprint_module component" data-module-id="game_js"><span>game_design.js</span></div>
+                                <div class="blueprint_module component" data-module-id="logo_js"><span>logo_design.js</span></div>
+                                <div class="blueprint_module component" data-module-id="cockpit">
+                                    <span>cockpit.js</span>
+                                    <div class="module_label">This Page's Logic</div>
+                                </div>
+
+                                <!-- Core Engine -->
+                                <div class="blueprint_module core" data-module-id="core">
+                                    <span>space_core.js</span>
+                                </div>
+                                
+                                <!-- Utilities -->
+                                <div class="blueprint_module util" data-module-id="camera"><span>space_camera_utils.js</span></div>
+                                <div class="blueprint_module util" data-module-id="stars"><span>space_stars_utils.js</span></div>
+                                <div class="blueprint_module util" data-module-id="planets"><span>space_planets_utils.js</span></div>
+                                <div class="blueprint_module util" data-module-id="galaxies"><span>space_galaxies_utils.js</span></div>
+                        
+                                <!-- Components -->
+                                <div class="blueprint_module component" data-module-id="loader"><span>loader.js</span></div>
+                                <div class="blueprint_module component" data-module-id="logo"><span>3Dlogo.js</span></div>
+                                
+                                <svg id="blueprint_connectors"></svg>
+                            </div>
+                            <div id="module_info_panel">
+                                <h3 id="module_info_title">Select a Module</h3>
+                                <p id="module_info_desc">Click on a module in the schematic to see its core responsibilities and a relevant code snippet.</p>
+                                <pre id="module_info_code" class="code_block"><code>// Details will appear here...</code></pre>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Component Views -->
                     <div id="cube_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: UI CUBE</h2>
+                        <h2 class="panel_title">MODEL: UI CUBE <span class="redundant_label">[REDUNDANT]</span></h2>
                         <div class="component_container">
                             <div class="component_description_panel">
                                 <h3>Project Showcase Module</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <p>This 3D cube, built entirely with CSS, was the project showcase on the homepage in the first iteration of the portfolio. It rotated back and forth inside the water and paused when you hovered over it. If clicked, it would expand into a larger cube that displayed the projects in a slideshow. Inside, you could scroll through project details and use the navigation buttons to switch between them.</p>
+                                <p>I added a subtle animated shine to the front face to give it a glass-like finish, which I have now re-used on this page which shows up occasionally.</p>
                             </div>
                             <div class="component_model_viewer">
                                 <div class="glass_container">
@@ -124,17 +138,20 @@
                     </div>
 
                     <div id="hexagon_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: KEYWORD CYLINDER</h2>
+                        <h2 class="panel_title">MODEL: WORD CYLINDER <span class="redundant_label">[REDUNDANT]</span></h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Word Display Scroller</h3>
+                                <p>On the homepage, I wanted a neat way to list my technical skills. My idea was an 'infinite' scroller with words on a flat transparent surface. I created this originally with a cube and words on each side, which erased and rewrote themselves after each 'turn'. </p>
+                                <p>This felt like overcomplicating things, so I tried to simplify it. My solution to this was to create a hexagon cylinder instead with the amount of faces scaling per word I wanted to display. This was the result of that idea.</p>
                             </div>
-                            <div class="component_model_viewer">
-                                <div class="hexagon_container">
-                                    <div class="hexagon">
-                                        <!-- Faces added by hexagon.js -->
+                            <div class="component_model_viewer hexagon_model_viewer">
+                                <div class="hexagon_assembly">
+                                    <div class="hexagon_casing"></div>
+                                    <div class="hexagon_rotator">
+                                        <div class="hexagon">
+                                            <!-- Faces added by hexagon.js -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -142,12 +159,11 @@
                     </div>
 
                     <div id="floater_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: FLOATING ENTITY</h2>
+                        <h2 class="panel_title">MODEL: FLOATING ENTITY <span class="redundant_label">[REDUNDANT]</span></h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Interactive Contact Module</h3>
+                                <p>I designed this floating 3D rectangle as a unique way to present my contact information. It drifted gently across the water on the homepage using a JavaScript animation for its position and rotation. Clicking on it opened up a contact modal, just like this one. The animation also paused on hover to make it easier to click. </p>
                             </div>
                             <div class="component_model_viewer">
                                 <div class="placeholder_model"></div>
@@ -156,71 +172,67 @@
                     </div>
                     
                     <div id="loader_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: 3D PRELOADER</h2>
+                        <h2 class="panel_title">MODEL: 3D PRELOADER</h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Loading Animation</h3>
+                                <p>To make the initial page load more interesting, I created a loading screen featuring a spinning 3D version of my logo. To make it 3D, I've recreated it in an SVG and added depth to it by mirroring it on all the coordinates, as shown in this wireframe model.</p>
+                                <p>I've added this rotating logo to the 'loading' screen as a way to show it off. This isn't an actual loading screen, as it only adds an arbitrary delay.</p>
                             </div>
                             <div class="component_model_viewer">
-                                <div class="placeholder_model"></div>
+                                <div id="loader_preview_wrapper">
+                                    <div id="logo3d_loader_preview">
+                                        <div class="logo_half left"></div>
+                                        <div class="logo_half right"></div>
+                                        <div class="logo_half mirror_left"></div>
+                                        <div class="logo_half mirror_right"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div id="hover_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: INTERACTIVE HIGHLIGHT</h2>
+                        <h2 class="panel_title">MODEL: BEAM OF LIGHT <span class="redundant_label">[REDUNDANT]</span></h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Lightbeam Effect</h3>
+                                <p>This is a custom lightbeam effect I created to add a bit of flair to the old homepage floater objects in the water. It created a 'beam of light' over the hovered element using CSS gradients and animated rays for a flickering effect.</p>
+                                <p>I wanted to create a sort of 'ethereal' feel while also showing the user that those elements could be interacted with.</p>
                             </div>
                             <div class="component_model_viewer">
-                                <div class="placeholder_model"></div>
+                                <button id="hover_effect_target" class="hover_target_button">Hover Over Me</button>
                             </div>
                         </div>
                     </div>
                     
                     <div id="parallax_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: DEPTH ENGINE</h2>
+                        <h2 class="panel_title">MODEL: PARALLAX BACKGROUND</h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Parallax Background</h3>
+                                <p>To simulate a 3D space on a 2D plane, I used a parallax effect that I learnt to do in a previous <a href="https://ras-khan.github.io/pages/game_design.html"> game project</a>. The background is made of several image layers that move at different speeds when the camera moves along the scene. The layer positions are updated in the main animation loop based on the camera's movement and rotation.</p>
                             </div>
                             <div class="component_model_viewer">
-                                <div class="placeholder_model"></div>
+                                <div class="parallax_model_container">
+                                    <div class="parallax_model_layer p_layer_far"></div>
+                                    <div class="parallax_model_layer p_layer_mid"></div>
+                                    <div class="parallax_model_layer p_layer_near"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div id="constellation_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: CONSTELLATION DRAWER</h2>
+                        <h2 class="panel_title">MODEL: INTERACTIVE CONSTELLATION <span class="redundant_label">[REDUNDANT]</span></h2>
                         <div class="component_container">
                             <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
+                                <h3>Interactive Night Sky</h3>
+                                <p>The old homepage's night sky was an HTML5 canvas animation that I wrote to show constellations on mouse hover. It also simulated 'supernovas' by making some stars explode at random intervals, which would disappear. Given enough time, it would eventually make the entire night sky pitch black. </p>
+                                <p>This feature came with quite a few challenges. For example, resizing the window changed the canvas's dimensions and caused the hovering to be inaccurate. I also had to add a throttling feature as the amount of stars on the page would lagg the website. This throttling is still used in other parts of the code.</p>
                             </div>
                             <div class="component_model_viewer">
-                                <div class="placeholder_model"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="water_view" class="view_panel component_view">
-                        <h2 class="panel_title">SCHEMATIC: LIQUID SIMULATOR</h2>
-                        <div class="component_container">
-                            <div class="component_description_panel">
-                                <h3>[Placeholder]</h3>
-                                <p>[Placeholder]</p>
-                                <p>[Placeholder]</p>
-                            </div>
-                            <div class="component_model_viewer">
-                                <div class="placeholder_model"></div>
+                                <div id="constellation_model_container" class="constellation_model"></div>
                             </div>
                         </div>
                     </div>
@@ -243,7 +255,6 @@
                     <button class="model_button" data-view="hover_view"> Hover </button>
                     <button class="model_button" data-view="parallax_view"> Parallax </button>
                     <button class="model_button" data-view="constellation_view"> Constellation </button>
-                    <button class="model_button" data-view="water_view"> Water </button>
                 </div>
             </div>
 
